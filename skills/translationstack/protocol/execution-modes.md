@@ -43,8 +43,9 @@ Workflow output is not durable truth by itself. The main loop must write accepte
 | Term and style confirmation (7) | main loop user dialogue |
 | Translation (8-9) | main loop for small projects; sub-agents for independent chunks; Workflow when confirmed |
 | AI pre-review (10) | sub-agent fan-out |
-| Render review.html (11) | script/template |
-| Open review.html (12) | local browser command |
+| Open review workbench (11) — dev mode (long-lived) | `bun skills/translationstack/scripts/serve.mjs <project-dir>` (background); URL + PID printed to stdout; auto-opens browser; idempotent on re-invoke; **do not kill between sessions** |
+| Open review workbench (11) — share mode (static bake) | `bun skills/translationstack/scripts/render-review.mjs <project-dir>` writes `export/review.html` (no live updates) |
+| Verify workbench (12) | `bun skills/translationstack/scripts/check-dev.mjs <project-dir>`; pure probe, does NOT spawn a server; exit 0 required |
 | Final validator (13) | Bash |
 | Export (14) | script or main loop file assembly |
 

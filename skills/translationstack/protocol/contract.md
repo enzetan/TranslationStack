@@ -42,12 +42,14 @@ If the source needs an out-of-scope format or conversion feature, stop and ask t
 ├── review/issues.jsonl
 ├── review/revisions.jsonl
 ├── memory/translation_memory.jsonl
-├── export/review.html
-├── export/output.md
+├── export/output.md             # final artifact
+├── export/review.html           # share-mode baked artifact; see note
 ├── export/export_manifest.json
 ├── export/export_qa_report.json
 └── runs/*.json
 ```
+
+`export/review.html` is a **share-mode / export-stage** artifact. In dev mode (review iteration) the workbench is served live by `scripts/serve.mjs` and no `export/review.html` is written. The strict validator does not require `export/review.html` to exist before export-policy gates are met.
 
 The minimum pre-translation working set is:
 

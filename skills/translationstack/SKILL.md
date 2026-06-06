@@ -96,8 +96,27 @@ When the user asks to translate a long document:
 8. Translate semantic chunks, not isolated sentences.
 9. Save translations under `translations/chunks/<chunk-id>.jsonl`.
 10. Create AI pre-review issues in `review/issues.jsonl`.
-11. Generate `export/review.html` from the skill template at `templates/review.html`.
-12. Automatically open `export/review.html` for the user in the local default browser. On macOS use `open <project-dir>/export/review.html`; on Linux use `xdg-open`; on Windows use `start`. Do not ask before opening this local review artifact. If opening fails or the environment has no GUI, report the absolute file path.
+11. **Start the dev workbench** (long-lived, one server per project):
+    ```bash
+    bun skills/translationstack/scripts/serve.mjs <project-dir> [--open|--no-open]
+    ```
+    - The server is designed to be left running in the background for the lifetime of the project. Multiple sessions and agents can hit the same server — do not kill it between turns.
+    - Default bind is `127.0.0.1:7878` (loopback only; pass `--host 0.0.0.0` only when you intentionally want LAN access, which prints a warning).
+    - On startup the server **auto-opens the browser** at the workbench URL (`--no-open` to skip). The URL is also printed to stdout for the user to click manually if the auto-open does not work (e.g. headless environment).
+    - Re-invoking `serve.mjs` while a server is already listening on the same port is **idempotent**: it probes the running server, prints its URL, auto-opens the browser, and exits 0. It does not kill the existing server.
+    - To stop the server: `kill -TERM <pid>` (the server prints its PID at startup). Do not stop casually — re-use across sessions.
+    - The workbench itself has two modes:
+      - **dev mode (default)**: the page fetches live data from `/api/data` and refreshes via SSE on file changes. Used during translation iteration.
+      - **share mode (for static archive / offline hand-off only)**: bake a single self-contained `export/review.html`
+        ```bash
+        bun skills/translationstack/scripts/render-review.mjs <project-dir>
+        ```
+        Then open it with the platform command (`open` / `xdg-open` / `start`). This produces a file the user can hand off without a server, but it loses live updates.
+12. **Verify the workbench is healthy** — run the smoke test:
+    ```bash
+    bun skills/translationstack/scripts/check-dev.mjs <project-dir>
+    ```
+    Exit code `0` is required. This script does NOT spawn a server itself — if no server is running, it fails with a clear hint to start one. Do not declare the step complete on visual inspection alone; "page renders" is not the same as "data loads".
 13. Run the skill validator and report the result.
 14. Export `export/output.md` only when export policy allows it, unless the user explicitly requests a draft export.
 

@@ -660,8 +660,54 @@
 
   <script>
     const raw = document.getElementById("translationstack-data").textContent.trim();
-    const data = parseData(raw);
+    const isPlaceholder = !raw || raw === "__TRANSLATIONSTACK_DATA__";
+    let data = parseData(raw);
     const $ = (selector) => document.querySelector(selector);
+
+    // --- Live data: dev server mode ---
+    // When the template is served by serve.mjs, the embedded JSON slot
+    // is the literal placeholder. In that case we fetch from /api/data
+    // and subscribe to /api/stream for real-time updates. When the
+    // template is opened as a baked static file (data embedded),
+    // isPlaceholder is false and we use the embedded data as-is.
+
+    async function loadLiveData() {
+      try {
+        const res = await fetch("/api/data", { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+      } catch (e) {
+        console.warn("[review] dev server not reachable:", e.message);
+        return null;
+      }
+    }
+
+    function showDevServerBanner() {
+      if (document.querySelector(".dev-server-banner")) return;
+      const banner = document.createElement("div");
+      banner.className = "dev-server-banner";
+      banner.setAttribute("role", "status");
+      banner.style.cssText =
+        "background:#FFF5F2;border-bottom:1px solid #D8A8A0;padding:10px 20px;color:#A4493D;font-family:var(--sans);font-size:13px;line-height:1.5;";
+      banner.innerHTML =
+        "<strong>dev server not running.</strong> Start it with: " +
+        "<code style=\"background:#fff;padding:1px 6px;border:1px solid #D8A8A0;\">" +
+        "bun skills/translationstack/scripts/serve.mjs &lt;project-dir&gt;</code>";
+      document.body.insertAdjacentElement("afterbegin", banner);
+    }
+
+    function renderAll() {
+      renderMeta();
+      renderStats();
+      renderGlossary();
+      renderChunks();
+      renderReviewNotes();
+    }
+
+    function bindAllTabs() {
+      bindMainTabs();
+      bindTabs();
+    }
 
     function parseData(rawText) {
       if (!rawText || rawText === "__TRANSLATIONSTACK_DATA__") {
@@ -1044,13 +1090,35 @@
       });
     }
 
-    renderMeta();
-    renderStats();
-    renderGlossary();
-    renderChunks();
-    renderReviewNotes();
-    bindMainTabs();
-    bindTabs();
+    (async function bootstrap() {
+      if (isPlaceholder) {
+        const live = await loadLiveData();
+        if (live) {
+          data = live;
+        } else {
+          showDevServerBanner();
+        }
+      }
+      renderAll();
+      bindAllTabs();
+
+      if (isPlaceholder) {
+        try {
+          const es = new EventSource("/api/stream");
+          es.addEventListener("data", async () => {
+            const fresh = await loadLiveData();
+            if (fresh) {
+              data = fresh;
+              renderAll();
+            }
+          });
+          // EventSource auto-reconnects on transport error; we don't
+          // need a manual "error" handler.
+        } catch (e) {
+          console.warn("[review] EventSource unavailable:", e.message);
+        }
+      }
+    })();
   </script>
 </body>
 </html>

@@ -36,14 +36,30 @@ If the user explicitly requests a draft export, record that decision and include
 Generate:
 
 - `export/output.md`
-- `export/review.html`
+- `export/review.html` (share mode only — see `contract.md`)
 - `export/export_manifest.json`
 - `export/export_qa_report.json`
 
-After generating `export/review.html`, open it automatically in the local default browser for review. Prefer the platform command:
+The review workbench runs in **dev mode** during translation iteration (live HTTP server, no file written). Start it once and leave it running — the server is designed to be re-used across sessions:
 
-- macOS: `open <project-dir>/export/review.html`
-- Linux: `xdg-open <project-dir>/export/review.html`
-- Windows: `start <project-dir>\export\review.html`
+```bash
+bun skills/translationstack/scripts/serve.mjs <project-dir>
+# On startup, the server:
+#   - prints the URL (default http://127.0.0.1:7878) and its PID
+#   - auto-opens the browser (use --no-open to skip)
+# Re-running serve.mjs while a server is already on the same port is
+# idempotent: it prints the existing URL and exits 0. The server does
+# NOT get killed between turns.
+```
 
-Do not ask before opening this local review artifact. If the command fails or the environment has no GUI, report the absolute path instead.
+Switch to **share mode** only when you need a self-contained file for offline review or hand-off:
+
+```bash
+bun skills/translationstack/scripts/render-review.mjs <project-dir>
+# then:
+open <project-dir>/export/review.html        # macOS
+xdg-open <project-dir>/export/review.html    # Linux
+start <project-dir>\export\review.html       # Windows
+```
+
+Do not declare the workbench step complete on visual inspection. Run `bun skills/translationstack/scripts/check-dev.mjs <project-dir>` and require exit code `0`. If check-dev reports "no dev server running", start one — the script does NOT spawn a server itself.
