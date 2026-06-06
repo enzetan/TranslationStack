@@ -1,0 +1,313 @@
+terms:
+  - source: agent
+    target: 智能体
+    status: confirmed
+    scope: global
+    origin: user
+    note: "本文核心术语；首次出现时可加英文括注 'agent (智能体)'，后续直接用'智能体'。"
+  - source: agents
+    target: 智能体
+    status: confirmed
+    scope: global
+    origin: user
+    note: "agent 复数形式，按中文习惯不区分单复数。"
+  - source: agentic system
+    target: 智能体系统
+    status: confirmed
+    scope: global
+    origin: user
+    note: "Anthropic 用来涵盖 workflows + agents 的统称。"
+  - source: agentic systems
+    target: 智能体系统
+    status: confirmed
+    scope: global
+    origin: user
+    note: "agentic system 复数。"
+  - source: workflow
+    target: 工作流
+    status: confirmed
+    scope: global
+    origin: user
+    note: "与 agents 并列出现的核心概念。"
+  - source: workflows
+    target: 工作流
+    status: confirmed
+    scope: global
+    origin: user
+    note: "workflow 复数。"
+  - source: LLM
+    target: LLM
+    status: confirmed
+    scope: global
+    origin: user
+    note: "首次出现时建议全称 '大语言模型 (LLM)'，后续保留 LLM。"
+  - source: LLMs
+    target: LLM
+    status: confirmed
+    scope: global
+    origin: user
+    note: "复数统一为 LLM。"
+  - source: large language model
+    target: 大语言模型
+    status: confirmed
+    scope: global
+    origin: user
+    note: "LLM 全称。"
+  - source: augmented LLM
+    target: 增强型 LLM
+    status: confirmed
+    scope: global
+    origin: user
+    note: "Anthropic 提出的基础构建块：retrieval + tools + memory。"
+  - source: building block
+    target: 构建块
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "指 augmented LLM 与各种 workflow pattern 的统称。"
+  - source: prompt chaining
+    target: 提示链
+    status: confirmed
+    scope: global
+    origin: user
+    note: "workflow pattern 之一；亦可写作 Prompt 链。"
+  - source: routing
+    target: 路由
+    status: confirmed
+    scope: global
+    origin: user
+    note: "workflow pattern 之一。"
+  - source: parallelization
+    target: 并行化
+    status: confirmed
+    scope: global
+    origin: user
+    note: "workflow pattern 之一。"
+  - source: sectioning
+    target: 分块
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "parallelization 的 Sectioning 变体：拆分子任务并行。"
+  - source: voting
+    target: 投票
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "parallelization 的 Voting 变体：同一任务多次取多样化输出。"
+  - source: orchestrator-workers
+    target: 编排者-工作者
+    status: confirmed
+    scope: global
+    origin: user
+    note: "workflow pattern 之一；保留连字符结构与原文一一对应。"
+  - source: evaluator-optimizer
+    target: 评估者-优化者
+    status: confirmed
+    scope: global
+    origin: user
+    note: "workflow pattern 之一。"
+  - source: agent-computer interface
+    target: 智能体-计算机接口
+    status: confirmed
+    scope: global
+    origin: user
+    note: "Anthropic 造词，对应 HCI 的 agent 版。"
+  - source: ACI
+    target: ACI
+    status: confirmed
+    scope: global
+    origin: user
+    note: "agent-computer interface 缩写；首次展开后保留 ACI。"
+  - source: human-computer interfaces
+    target: 人机界面
+    status: confirmed
+    scope: global
+    origin: user
+    note: "HCI 全称。"
+  - source: HCI
+    target: HCI
+    status: confirmed
+    scope: global
+    origin: user
+    note: "human-computer interfaces 缩写。"
+  - source: guardrails
+    target: 护栏
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "parallelization sectioning 示例：内容审核/安全过滤。"
+  - source: in-context examples
+    target: 上下文示例
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "指 prompt 中放入的 few-shot 示例。"
+  - source: retrieval
+    target: 检索
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "augmented LLM 的能力之一。"
+  - source: tools
+    target: 工具
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "augmented LLM 能力之一 + agent 行为核心。"
+  - source: memory
+    target: 记忆
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "augmented LLM 能力之一。"
+  - source: Model Context Protocol
+    target: Model Context Protocol (MCP，模型上下文协议)
+    status: confirmed
+    scope: global
+    origin: user
+    note: "Anthropic 提出的协议名；首次展开，后续段落用 MCP。"
+  - source: MCP
+    target: MCP
+    status: confirmed
+    scope: global
+    origin: user
+    note: "Model Context Protocol 缩写。"
+  - source: tool use
+    target: 工具调用
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "Claude 调用外部工具的能力。"
+  - source: tool use block
+    target: 工具使用块
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "Anthropic API 响应中表示工具调用的字段。"
+  - source: Poka-yoke
+    target: Poka-yoke（防错法）
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "日语借词，意为「防错设计」；保留原文 + 中文括注更稳。"
+  - source: SWE-bench
+    target: SWE-bench
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "Anthropic 基准名；首次出现可加中文括注 'SWE-bench 基准'。"
+  - source: SWE-bench Verified
+    target: SWE-bench Verified
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "SWE-bench 的 verified 子集。"
+  - source: computer use
+    target: computer use（计算机使用）
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "Anthropic '让 Claude 操作计算机' 参考实现名。"
+  - source: Claude Agent SDK
+    target: Claude Agent SDK
+    status: confirmed
+    scope: global
+    origin: user
+    note: "产品名，保留原文。"
+  - source: Strands Agents SDK by AWS
+    target: Strands Agents SDK（AWS）
+    status: confirmed
+    scope: global
+    origin: user
+    note: "产品名，保留原文。"
+  - source: Rivet
+    target: Rivet
+    status: confirmed
+    scope: global
+    origin: user
+    note: "产品名，保留原文。"
+  - source: Vellum
+    target: Vellum
+    status: confirmed
+    scope: global
+    origin: user
+    note: "产品名，保留原文。"
+  - source: Claude Haiku 4.5
+    target: Claude Haiku 4.5
+    status: confirmed
+    scope: global
+    origin: user
+    note: "模型名，保留原文。"
+  - source: Claude Sonnet 4.5
+    target: Claude Sonnet 4.5
+    status: confirmed
+    scope: global
+    origin: user
+    note: "模型名，保留原文。"
+  - source: Anthropic
+    target: Anthropic
+    status: confirmed
+    scope: global
+    origin: user
+    note: "公司名，保留原文。"
+  - source: cookbook
+    target: cookbook
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "Anthropic 文档站 cookbook 链接；保留英文。"
+  - source: workbench
+    target: workbench
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "Anthropic 控制台工具名，保留英文。"
+  - source: feedback loop
+    target: 反馈循环
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "agents 应用共性之一。"
+  - source: human oversight
+    target: 人类监督
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "agents 应用共性之一。"
+  - source: ground truth
+    target: 真实信号
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "指 agent 在执行中获得的工具调用/代码执行等环境反馈。"
+  - source: stopping conditions
+    target: 停止条件
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "agents 的迭代终止条件（如最大迭代次数）。"
+  - source: evals
+    target: evals
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "evaluations 的缩写，自动化评估 LLM 表现；保留英文。"
+  - source: usage-based pricing
+    target: 按用量计费
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "客服 agent 按成功解决量计费的商业模式。"
+  - source: documentation and testing
+    target: 文档与测试
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "ACI 设计的核心动作。"
+  - source: junior developer
+    target: 初级开发者
+    status: confirmed
+    scope: global
+    origin: agent
+    note: "tool docstring 设计的比喻对象。"

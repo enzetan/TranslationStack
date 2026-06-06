@@ -1,0 +1,47 @@
+# Bun
+.bun/
+bun.lockb
+
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+*.tsbuildinfo
+
+# IDE
+.idea/
+.vscode/
+.claude/
+.codex/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# SQLite databases (local state)
+*.db
+*.db-wal
+*.db-shm
+
+# Temporary files
+.tmp/
+*.tmp
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# TranslationStack specific
+# (per-project, these should be tracked within the project folder)
+# translationstack.db
+
+.translationstack/

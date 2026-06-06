@@ -1,0 +1,44 @@
+{
+  "run_id": "run-2026-06-06-export-v1",
+  "type": "export",
+  "execution_mode": "main-loop",
+  "tool_used": "main-loop",
+  "started_at": "2026-06-06T12:15:00Z",
+  "ended_at": "2026-06-06T12:20:00Z",
+  "inputs": [
+    "chunk_manifest.yaml",
+    "translations/chunks/*.jsonl",
+    "glossary/glossary.yaml",
+    "review/issues.jsonl",
+    "review/revisions.jsonl"
+  ],
+  "outputs": [
+    "export/output.md",
+    "export/review.html",
+    "export/export_manifest.json",
+    "export/export_qa_report.json",
+    "export/assets/01-augmented-llm.png",
+    "export/assets/02-prompt-chaining.png",
+    "export/assets/03-routing.png",
+    "export/assets/04-parallelization.png",
+    "export/assets/05-orchestrator-workers.png",
+    "export/assets/06-evaluator-optimizer.png",
+    "export/assets/07-autonomous-agent.png",
+    "export/assets/08-coding-agent-flow.png"
+  ],
+  "stats": {
+    "chunks_exported": 18,
+    "image_assets_copied": 8,
+    "open_high_or_critical_issues": 0,
+    "open_low_issues": 2
+  },
+  "validator_result": {
+    "ok": true,
+    "errors": 0,
+    "warnings": 0
+  },
+  "limitations": [
+    "Two open low-severity glossary-proposal issues (i-add-006 prompt, i-add-007 docstring) deferred to user; do not block export.",
+    "Italic-recovery uses **bold** instead of *italic* in Chinese context — visual style differs from source."
+  ]
+}

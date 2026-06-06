@@ -1,0 +1,34 @@
+project:
+  id: building-effective-agents
+  name: "Building effective agents (Anthropic, Dec 2024)"
+  source_language: en
+  target_language: zh-Hans
+  domain: ai-engineering
+  summary: "Anthropic 关于如何构建 LLM 智能体（agents）与工作流（workflows）的工程实践文章"
+
+translation_policy:
+  preserve_code_fences: true
+  preserve_inline_code: true
+  preserve_image_refs: true
+  preserve_links: true
+  preserve_yaml_json_keys: true
+  translate_alt_text: true
+  notes: "代码、链接、image 引用、URL path、产品名（如 Claude Sonnet 4.5 / Haiku 4.5 / SWE-bench）保留原文；段落标题、强调、列表语义保留。"
+
+review_policy:
+  export_requires_reviewed: true
+  lenses: [terminology, marker, accuracy, readability, cross_chunk, domain_precision]
+  notes: "AI 预审使用多 lens sub-agent fan-out；高严重度问题需在 export 前解决。"
+
+export_policy:
+  allow_pending: false
+  allow_blocked: false
+  allow_stale: false
+  allow_open_high_issues: false
+  allow_unreviewed: false
+  draft_export: false
+  notes: "默认 export 策略严格：仅在所有 chunk 状态为 reviewed/exported 且无 high/critical open issue 时才允许 export。"
+
+execution:
+  default_mode: main-loop
+  notes: "本项目体量适中（18 个 chunk, 213 行），使用 main-loop 模式顺序翻译；预审环节使用 sub-agent fan-out。"

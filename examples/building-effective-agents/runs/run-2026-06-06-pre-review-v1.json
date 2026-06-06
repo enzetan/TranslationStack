@@ -1,0 +1,66 @@
+{
+  "run_id": "run-2026-06-06-pre-review-v1",
+  "type": "pre_review",
+  "execution_mode": "sub-agent",
+  "tool_used": "Agent",
+  "started_at": "2026-06-06T11:55:00Z",
+  "ended_at": "2026-06-06T12:15:00Z",
+  "inputs": [
+    "source/original.md",
+    "glossary/glossary.yaml",
+    "style/style_guide.yaml",
+    "translations/chunks/01-intro.jsonl",
+    "translations/chunks/02-patterns.jsonl",
+    "translations/chunks/03-summary.jsonl",
+    "runs/run-2026-06-06-translate-v1.json"
+  ],
+  "outputs": [
+    "review/issues.jsonl",
+    "review/revisions.jsonl",
+    "translations/chunks/01-intro.jsonl (revised)",
+    "translations/chunks/02-patterns.jsonl (revised)",
+    "translations/chunks/03-summary.jsonl (revised)",
+    "chunk_manifest.yaml (state translated -> reviewed)"
+  ],
+  "agents": [
+    {
+      "role": "terminology lens",
+      "findings_count": 7,
+      "high_or_critical": 0
+    },
+    {
+      "role": "structure lens",
+      "findings_count": 3,
+      "high_or_critical": 0
+    },
+    {
+      "role": "accuracy_readability lens",
+      "findings_count": 3,
+      "high_or_critical": 0
+    }
+  ],
+  "stats": {
+    "findings_total": 13,
+    "findings_by_severity": {"low": 7, "medium": 6, "high": 0, "critical": 0},
+    "issues_resolved": 9,
+    "issues_closed": 2,
+    "issues_open": 2,
+    "revisions_applied": 10
+  },
+  "merge_decisions": [
+    "Applied: i-term-001 (c06 'tools' -> '工具', distinguishing from 'tool use')",
+    "Applied: i-term-002 + i-term-002b (c09 + c12 'guardrails' cross-chunk consistency)",
+    "Applied: i-term-003 (c09 'evals' retained as English per glossary)",
+    "Applied: i-term-004 (c04 'Strands Agents SDK（AWS）' Chinese-paren form)",
+    "Applied: i-omit-005 (c18 recover 'your agent' framing)",
+    "Applied: i-acc-002 (c11 'polished document' -> '打磨好的文档' adjective)",
+    "Applied: i-str-001/002/003 (recover italic emphasis as **xxx** in Chinese context)",
+    "Closed (no fix): i-acc-001 (topographically -> topologically intentional per style guide sample)",
+    "Closed (no fix): i-acc-003 (When/if conditional swap, practical meaning preserved)",
+    "Left open: i-add-006 + i-add-007 (glossary additions for 'prompt' and 'docstring', deferred to user)"
+  ],
+  "limitations": [
+    "Pre-review used 3 lenses; did not add a cross-chunk terminology dedup pass beyond what structure and accuracy lenses surfaced.",
+    "Italic-recovery decisions picked **bold** over *italic* in Chinese context — judgment call, not strictly equivalent to source styling."
+  ]
+}

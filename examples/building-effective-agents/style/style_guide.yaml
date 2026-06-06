@@ -1,0 +1,33 @@
+style:
+  strategy: faithful_readable
+  register: formal
+  tone: neutral
+  sentence_structure: moderate_long
+  modernization: restrained
+  notes: "面向中文 LLM 应用开发者；忠实原文 + 顺滑中文；保留英文论证结构，调整语序到中文自然表达；不做本地化改写。"
+
+preferences:
+  prefer:
+    - 保留英文产品名与超链接 path（Claude Agent SDK / Strands Agents SDK / Rivet / Vellum / Claude Haiku 4.5 / Claude Sonnet 4.5 / Anthropic 等）
+    - 论证链条完整，结构与原文一一对应
+    - 列表与加粗语义保留
+    - 标题层级与编号列表保持原结构
+    - 术语首次出现时给出中文译法 + 英文括注，后续段落沿用已确认译法
+    - 链接、URL、代码块、image 引用、inline code 严格不译
+  avoid:
+    - 网络流行语
+    - 过度修辞或营销腔
+    - 公众号化表达
+    - "我们将…" / "那么…" 等中式口头禅
+    - 把 workflows 译为「工作流程」
+
+samples:
+  - source: "Some customers define agents as fully autonomous systems that operate independently over extended periods, using various tools to accomplish complex tasks."
+    target: "一些客户把智能体（agent）定义为完全自主、能在长时间跨度内独立运作的系统，它们会调用各种工具来完成复杂任务。"
+    note: "首次出现 agent 时加英文括注；保留 'fully autonomous' 的语义强度。"
+  - source: "Workflows are systems where LLMs and tools are orchestrated through predefined code paths."
+    target: "工作流（workflow）是按预定义代码路径来编排 LLM 与工具的系统。"
+    note: "workflow 首次出现加括注；'orchestrated' 译为'编排'，与 orchestrator-workers 术语一致。"
+  - source: "Whereas it's topographically similar, the key difference from parallelization is its flexibility—subtasks aren't pre-defined, but determined by the orchestrator based on the specific input."
+    target: "二者（与并行化）在拓扑结构上相似，但编排者-工作者的关键区别在于灵活性——子任务并非预定义，而是由编排者根据具体输入动态决定。"
+    note: "原文 'topographically' 疑似 'topologically' 之误；译为'拓扑结构上'，不刻意修正，保留原文措辞以供后续 review 标注。"

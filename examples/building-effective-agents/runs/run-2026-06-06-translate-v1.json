@@ -1,0 +1,37 @@
+{
+  "run_id": "run-2026-06-06-translate-v1",
+  "type": "translate",
+  "execution_mode": "main-loop",
+  "tool_used": "main-loop",
+  "started_at": "2026-06-06T11:46:00Z",
+  "ended_at": "2026-06-06T11:55:00Z",
+  "inputs": [
+    "source/original.md",
+    "chunk_manifest.yaml",
+    "glossary/glossary.yaml",
+    "glossary/glossary_proposals.jsonl",
+    "style/style_guide.yaml"
+  ],
+  "outputs": [
+    "translations/chunks/01-intro.jsonl",
+    "translations/chunks/02-patterns.jsonl",
+    "translations/chunks/03-summary.jsonl"
+  ],
+  "stats": {
+    "chunks_translated": 18,
+    "glossary_terms_confirmed": 49,
+    "image_refs_preserved": 8,
+    "links_preserved": 14
+  },
+  "merge_decisions": [
+    "Translated H1 title 'Building effective agents' to '构建高效的智能体' to keep parity with the rest of the article; H2/H3 headings translated.",
+    "All English product names (Claude Agent SDK, Strands Agents SDK by AWS, Rivet, Vellum, Claude Haiku 4.5, Claude Sonnet 4.5, Anthropic, cookbook, workbench, SWE-bench, computer use) preserved verbatim.",
+    "Used faithful_readable style: preserved English structure, adjusted word order for Chinese naturalness, did not rewrite.",
+    "Pattern names orchestrator-workers / evaluator-optimizer translated as 编排者-工作者 / 评估者-优化者; preserved the hyphen structure.",
+    "Preserved the original 'topographically similar' wording in c10 (likely typo for topologically) — translated as '拓扑结构上' which retains the visual 'topo-' cue without inventing a fix."
+  ],
+  "limitations": [
+    "Single-pass translation; no segment-level translations were emitted (chunk-level rows only).",
+    "Did not re-validate intermediate states between chunks."
+  ]
+}

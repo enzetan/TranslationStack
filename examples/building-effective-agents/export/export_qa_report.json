@@ -1,0 +1,33 @@
+{
+  "ok": true,
+  "generated_at": "2026-06-06T12:20:00Z",
+  "draft_export": false,
+  "checks": {
+    "all_chunks_translated": true,
+    "no_blocked_chunks": true,
+    "no_stale_chunks": true,
+    "no_high_open_issues": true,
+    "no_critical_open_issues": true,
+    "no_marker_mismatch": true,
+    "no_source_coverage_gap": true,
+    "no_duplicate_chunk_id": true,
+    "no_empty_translation": true,
+    "image_refs_resolve": true
+  },
+  "stats": {
+    "chunks_total": 18,
+    "chunks_in_reviewed_state": 18,
+    "open_issues_total": 2,
+    "open_issues_by_severity": {"low": 2, "medium": 0, "high": 0, "critical": 0},
+    "resolved_issues": 10,
+    "closed_issues": 2,
+    "image_assets_copied": 8,
+    "glossary_confirmed_terms": 52
+  },
+  "open_issues": [
+    {"id": "i-add-006", "chunk_id": "c14.summary", "severity": "low", "note": "Glossary proposal: add 'prompt' as confirmed term (target: prompt)."},
+    {"id": "i-add-007", "chunk_id": "c18.appendix2", "severity": "low", "note": "Glossary proposal: add 'docstring' as confirmed term (target: docstring)."}
+  ],
+  "errors": [],
+  "warnings": []
+}

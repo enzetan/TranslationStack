@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TranslationStack Review</title>
+  <style>
+    :root {
+      --bg: #FAF9F5;
+      --surface: #FFFFFF;
+      --text: #141413;
+      --text-2: #3D3D3A;
+      --text-3: #87867F;
+      --border: #D1CFC5;
+      --border-light: #E6E3DA;
+      --accent-a: #788C5D;
+      --accent-a-border: #B9C3A8;
+      --accent-b: #D97757;
+      --muted-bg: #F0EEE6;
+      --bad: #A4493D;
+      --bad-bg: #FFF5F2;
+      --bad-border: #D8A8A0;
+      --serif: ui-serif, Georgia, "Noto Serif SC", serif;
+      --sans: system-ui, -apple-system, "PingFang SC", sans-serif;
+      --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      border-radius: 0 !important;
+    }
+
+    svg rect {
+      rx: 0;
+      ry: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .shell {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 34px 20px 64px;
+    }
+
+    .masthead {
+      padding: 0 0 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 12px;
+      color: var(--accent-b);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .masthead h1 {
+      max-width: 920px;
+      margin: 0;
+      color: var(--text);
+      font-family: var(--serif);
+      font-size: 54px;
+      font-weight: 700;
+      line-height: 1.04;
+      letter-spacing: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .summary {
+      max-width: 780px;
+      margin: 14px 0 0;
+      color: var(--text-2);
+      font-size: 15px;
+      line-height: 1.65;
+      overflow-wrap: anywhere;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-2);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.4;
+      max-width: 100%;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .top-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-top: 22px;
+      border-top: 1px solid var(--border-light);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .top-nav button {
+      appearance: none;
+      padding: 10px 14px;
+      border: 0;
+      border-right: 1px solid var(--border-light);
+      background: transparent;
+      color: var(--text-2);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      transition: color 120ms ease, border-color 120ms ease;
+    }
+
+    .top-nav button:first-child {
+      border-left: 1px solid var(--border-light);
+    }
+
+    .top-nav button:hover,
+    .top-nav button.active {
+      background: var(--surface);
+      color: var(--accent-b);
+      border-color: var(--border);
+    }
+
+    .top-nav button:focus-visible,
+    .tab-nav button:focus-visible,
+    details.chunk-card summary:focus-visible {
+      outline: 2px solid var(--accent-b);
+      outline-offset: -2px;
+    }
+
+    .content {
+      margin: 28px 0 0;
+      min-width: 0;
+    }
+
+    .panel {
+      margin-top: 0;
+    }
+
+    .panel[hidden] {
+      display: none !important;
+    }
+
+    .sec-head {
+      display: flex;
+      align-items: baseline;
+      gap: 14px;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sec-head .num {
+      color: var(--accent-a);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .sec-head h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0;
+      line-height: 1.2;
+    }
+
+    .metrics-strip {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .metric {
+      min-height: 112px;
+      padding: 14px;
+      border-right: 1px solid var(--border-light);
+    }
+
+    .metric:last-child {
+      border-right: 0;
+    }
+
+    .metric-label {
+      color: var(--text-3);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .metric-value {
+      display: block;
+      margin-top: 8px;
+      color: var(--text);
+      font-family: var(--mono);
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1;
+      overflow-wrap: anywhere;
+    }
+
+    .metric-foot {
+      margin-top: 10px;
+      color: var(--text-3);
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .info-card {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      padding: 16px;
+    }
+
+    .info-card h3 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 18px;
+      line-height: 1.25;
+    }
+
+    .info-card p {
+      margin: 10px 0 0;
+      color: var(--text-2);
+    }
+
+    .evidence {
+      margin-top: 12px;
+      padding: 8px 0 8px 10px;
+      border-left: 2px solid var(--accent-a);
+      color: var(--text-3);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.5;
+    }
+
+    .tab-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tab-nav button {
+      appearance: none;
+      padding: 9px 14px;
+      border: 1px solid var(--border-light);
+      border-bottom: 0;
+      background: var(--muted-bg);
+      color: var(--text-2);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 11px;
+      transition: color 120ms ease, border-color 120ms ease;
+    }
+
+    .tab-nav button + button {
+      border-left: 0;
+    }
+
+    .tab-nav button:hover,
+    .tab-nav button.active {
+      border-color: var(--border);
+      background: var(--surface);
+      color: var(--accent-b);
+    }
+
+    .details-list {
+      display: grid;
+      gap: 14px;
+      min-width: 0;
+    }
+
+    .filter-empty {
+      display: none;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-3);
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .filter-empty.visible {
+      display: block;
+    }
+
+    details.chunk-card {
+      max-width: 100%;
+      min-width: 0;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    details.chunk-card[hidden] {
+      display: none !important;
+    }
+
+    details.chunk-card summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto auto;
+      gap: 12px;
+      align-items: center;
+      padding: 13px 14px;
+      cursor: pointer;
+      list-style: none;
+      border-bottom: 1px solid transparent;
+    }
+
+    details.chunk-card[open] summary {
+      border-bottom-color: var(--border-light);
+      background: var(--muted-bg);
+    }
+
+    details.chunk-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .chunk-title {
+      min-width: 0;
+    }
+
+    .chunk-title strong {
+      display: block;
+      color: var(--text);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .chunk-title span {
+      display: block;
+      margin-top: 3px;
+      overflow: hidden;
+      color: var(--text-3);
+      font-size: 12px;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .state-badge,
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 3px 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text-2);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .state-badge.reviewed,
+    .state-badge.exported {
+      border-color: var(--accent-a-border);
+      color: var(--accent-a);
+    }
+
+    .state-badge.stale,
+    .state-badge.blocked {
+      border-color: var(--bad-border);
+      color: var(--bad);
+    }
+
+    .chunk-body {
+      min-width: 0;
+      padding: 14px;
+    }
+
+    .chunk-summary {
+      margin: 0 0 14px;
+      color: var(--text-2);
+    }
+
+    .segment-grid {
+      display: grid;
+      min-width: 720px;
+      border: 1px solid var(--border-light);
+    }
+
+    .segment-row {
+      display: grid;
+      grid-template-columns: 120px minmax(0, 1fr) minmax(0, 1fr);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .segment-row:last-child {
+      border-bottom: 0;
+    }
+
+    .segment-cell {
+      min-width: 0;
+      padding: 11px 12px;
+      border-right: 1px solid var(--border-light);
+      background: var(--surface);
+    }
+
+    .segment-cell:last-child {
+      border-right: 0;
+    }
+
+    .segment-row.header .segment-cell {
+      background: var(--muted-bg);
+      color: var(--text-3);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .segment-id {
+      color: var(--text-3);
+      font-family: var(--mono);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    .text-block {
+      color: var(--text-2);
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .target-block {
+      color: var(--text);
+    }
+
+    .issue-list {
+      display: grid;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .issue {
+      padding: 10px 12px;
+      border: 1px solid var(--bad-border);
+      background: var(--bad-bg);
+      color: var(--text-2);
+    }
+
+    .issue strong {
+      color: var(--bad);
+      font-family: var(--mono);
+      font-size: 11px;
+      text-transform: uppercase;
+    }
+
+    .intent-grid {
+      display: grid;
+      min-width: 620px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .intent-row {
+      display: grid;
+      grid-template-columns: minmax(120px, 0.7fr) minmax(120px, 0.7fr) minmax(220px, 1.4fr);
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .intent-row:last-child {
+      border-bottom: 0;
+    }
+
+    .intent-cell {
+      min-width: 0;
+      padding: 10px 12px;
+      border-right: 1px solid var(--border-light);
+      overflow-wrap: anywhere;
+    }
+
+    .intent-cell:last-child {
+      border-right: 0;
+    }
+
+    .intent-row.header .intent-cell {
+      background: var(--muted-bg);
+      color: var(--text-3);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .mono {
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .empty {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-3);
+      padding: 14px;
+      font-family: var(--mono);
+      font-size: 11px;
+    }
+
+    .overflow-wrap {
+      max-width: 100%;
+      min-width: 0;
+      overflow-x: auto;
+    }
+
+    .footer {
+      margin-top: 56px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+      color: var(--text-3);
+      font-family: var(--mono);
+      font-size: 11px;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 860px) {
+      .shell {
+        padding: 26px 14px 48px;
+      }
+
+      .content {
+        margin-left: 0;
+      }
+
+      .masthead h1 {
+        font-size: 34px;
+      }
+
+      .metrics-strip,
+      .card-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .metric {
+        border-right: 0;
+        border-bottom: 1px solid var(--border-light);
+      }
+
+      .metric:last-child {
+        border-bottom: 0;
+      }
+
+      details.chunk-card summary {
+        grid-template-columns: 1fr;
+      }
+
+      .chunk-title span {
+        white-space: normal;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <script id="translationstack-data" type="application/json">__TRANSLATIONSTACK_DATA__</script>
+
+  <div class="shell">
+    <header class="masthead">
+      <span class="eyebrow">TranslationStack review</span>
+      <h1 id="project-title">Translation Review</h1>
+      <p class="summary" id="project-subtitle">Contract files, bilingual chunks, glossary decisions, and export blockers in one static HTML report.</p>
+      <div class="meta-row" id="project-meta"></div>
+      <nav class="top-nav" role="tablist" aria-label="Report sections">
+        <button type="button" id="tab-overview" class="active" role="tab" data-panel="overview" aria-controls="overview" aria-selected="true">01 Overview</button>
+        <button type="button" id="tab-chunks" role="tab" data-panel="chunks-section" aria-controls="chunks-section" aria-selected="false">02 Chunks</button>
+        <button type="button" id="tab-glossary" role="tab" data-panel="glossary-section" aria-controls="glossary-section" aria-selected="false">03 Glossary</button>
+        <button type="button" id="tab-qa" role="tab" data-panel="qa-section" aria-controls="qa-section" aria-selected="false">04 Export gate</button>
+      </nav>
+    </header>
+
+    <main class="content">
+      <section id="overview" class="panel" role="tabpanel" aria-labelledby="tab-overview" tabindex="0">
+        <div class="sec-head">
+          <span class="num">01</span>
+          <h2>项目概览：状态与风险</h2>
+        </div>
+        <div class="metrics-strip" id="project-stats"></div>
+      </section>
+
+      <section id="chunks-section" class="panel" role="tabpanel" aria-labelledby="tab-chunks" tabindex="0" hidden>
+        <div class="sec-head">
+          <span class="num">02</span>
+          <h2>审校段落：双语对照</h2>
+        </div>
+        <div class="tab-nav" id="chunk-tabs" aria-label="Chunk filters">
+          <button type="button" class="active" data-filter="all" aria-pressed="true">All</button>
+          <button type="button" data-filter="issues" aria-pressed="false">Issues</button>
+          <button type="button" data-filter="blocked" aria-pressed="false">Blocked/Stale</button>
+        </div>
+        <div class="filter-empty" id="chunk-filter-empty" role="status"></div>
+        <div class="details-list" id="chunks"></div>
+      </section>
+
+      <section id="glossary-section" class="panel" role="tabpanel" aria-labelledby="tab-glossary" tabindex="0" hidden>
+        <div class="sec-head">
+          <span class="num">03</span>
+          <h2>术语表：已确认用法</h2>
+        </div>
+        <div class="overflow-wrap" id="glossary"></div>
+      </section>
+
+      <section id="qa-section" class="panel" role="tabpanel" aria-labelledby="tab-qa" tabindex="0" hidden>
+        <div class="sec-head">
+          <span class="num">04</span>
+          <h2>导出门禁：检查项</h2>
+        </div>
+        <div class="card-grid" id="review-notes"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      generated: TranslationStack · artifact: export/review.html · dependency: none
+    </footer>
+  </div>
+
+  <script>
+    const raw = document.getElementById("translationstack-data").textContent.trim();
+    const data = parseData(raw);
+    const $ = (selector) => document.querySelector(selector);
+
+    function parseData(rawText) {
+      if (!rawText || rawText === "__TRANSLATIONSTACK_DATA__") {
+        return {
+          project: {
+            name: "TranslationStack Review Template",
+            summary: "Render this file through TranslationStack to embed project data.",
+          },
+          stats: {},
+          glossary: [],
+          chunks: [],
+        };
+      }
+
+      try {
+        return JSON.parse(rawText);
+      } catch (error) {
+        return {
+          project: {
+            name: "TranslationStack Review Data Error",
+            summary: `Invalid embedded JSON: ${error.message}`,
+          },
+          stats: {},
+          glossary: [],
+          chunks: [],
+        };
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    function field(object, ...keys) {
+      for (const key of keys) {
+        if (object && object[key] !== undefined && object[key] !== null && object[key] !== "") {
+          return object[key];
+        }
+      }
+      return "";
+    }
+
+    function asNumber(value) {
+      const number = Number(value);
+      return Number.isFinite(number) ? number : null;
+    }
+
+    function statNumber(stats, ...keys) {
+      for (const key of keys) {
+        const value = asNumber(stats?.[key]);
+        if (value !== null) return value;
+      }
+      return null;
+    }
+
+    function stateClass(value) {
+      return String(value || "pending").toLowerCase().replace(/[^a-z0-9_-]/g, "-");
+    }
+
+    function plural(count, singular, pluralValue) {
+      return `${count} ${count === 1 ? singular : pluralValue}`;
+    }
+
+    function isBlockingState(value) {
+      return ["stale", "blocked"].includes(stateClass(value));
+    }
+
+    function isTranslatedState(value) {
+      return ["translated", "reviewing", "reviewed", "stale", "exported"].includes(stateClass(value));
+    }
+
+    function isReviewedState(value) {
+      return ["reviewed", "exported"].includes(stateClass(value));
+    }
+
+    function isOpenIssue(issue) {
+      const status = stateClass(field(issue, "status") || "open");
+      return !["closed", "resolved", "done"].includes(status);
+    }
+
+    function chunkIssueCount(chunk, openOnly = true) {
+      let count = Array.isArray(chunk.issues) ? chunk.issues.length : 0;
+      for (const segment of chunk.segments || []) {
+        count += Array.isArray(segment.issues) ? segment.issues.length : 0;
+      }
+      if (!openOnly) return count;
+
+      const chunkIssues = Array.isArray(chunk.issues) ? chunk.issues.filter(isOpenIssue).length : 0;
+      const segmentIssues = (chunk.segments || []).reduce(
+        (sum, segment) => sum + (Array.isArray(segment.issues) ? segment.issues.filter(isOpenIssue).length : 0),
+        0
+      );
+      return chunkIssues + segmentIssues;
+    }
+
+    function chunkIsBlocked(chunk) {
+      return isBlockingState(chunk.state) || (chunk.segments || []).some((segment) => isBlockingState(segment.status || segment.state));
+    }
+
+    function chunkIsTranslated(chunk) {
+      if (isTranslatedState(chunk.state)) return true;
+      return (chunk.segments || []).some((segment) => Boolean(field(segment, "target", "target_markdown", "translation")));
+    }
+
+    function chunkIsReviewed(chunk) {
+      return isReviewedState(chunk.state) || (chunk.segments || []).some((segment) => isReviewedState(segment.status || segment.state));
+    }
+
+    function statBlockedCount(stats, chunks) {
+      const stale = statNumber(stats, "stale", "staleCount", "stale_count");
+      const blocked = statNumber(stats, "blocked", "blockedCount", "blocked_count");
+      if (stale !== null || blocked !== null) return (stale || 0) + (blocked || 0);
+      return chunks.filter(chunkIsBlocked).length;
+    }
+
+    function renderMeta() {
+      const project = data.project || {};
+      const name = field(project, "name", "title") || "Translation Review";
+      const source = field(project, "sourceLanguage", "source_language") || "Source";
+      const target = field(project, "targetLanguage", "target_language") || "Target";
+      const domain = field(project, "domain") || "General";
+      const summary = field(project, "summary", "description");
+
+      document.getElementById("project-title").textContent = name;
+      document.getElementById("project-subtitle").textContent =
+        summary || `${source} -> ${target} · ${domain} · review before export`;
+
+      const meta = [
+        field(project, "id") && `project: ${field(project, "id")}`,
+        field(project, "generatedAt", "generated_at") && `generated: ${field(project, "generatedAt", "generated_at")}`,
+        domain && `domain: ${domain}`,
+        source && `source: ${source}`,
+        target && `target: ${target}`,
+      ].filter(Boolean);
+
+      $("#project-meta").innerHTML = meta
+        .map((item) => `<span class="meta-chip">${escapeHtml(item)}</span>`)
+        .join("");
+    }
+
+    function renderStats() {
+      const stats = data.stats || {};
+      const chunks = data.chunks || [];
+      const derivedIssueCount = chunks.reduce((sum, chunk) => sum + chunkIssueCount(chunk), 0);
+      const blockedCount = statBlockedCount(stats, chunks);
+      const reviewedCount = chunks.filter(chunkIsReviewed).length;
+      const translatedCount = chunks.filter(chunkIsTranslated).length;
+      const statsChunks = statNumber(stats, "chunks", "chunkCount", "chunk_count");
+      const statsTranslated = statNumber(stats, "translated", "translatedCount", "translated_count");
+      const statsReviewed = statNumber(stats, "reviewed", "reviewedCount", "reviewed_count");
+      const statsIssues = statNumber(stats, "openIssues", "open_issues", "issues", "issueCount", "issue_count");
+
+      const items = [
+        ["Chunks", statsChunks ?? chunks.length, "semantic units"],
+        ["Translated", statsTranslated ?? translatedCount, "has target text or translated state"],
+        ["Reviewed", statsReviewed ?? reviewedCount, "review/export states"],
+        ["Open Issues", statsIssues ?? derivedIssueCount, "from chunk and segment notes"],
+        ["Blocked", blockedCount, "stale or blocked chunks"],
+      ];
+
+      $("#project-stats").innerHTML = items
+        .map(([label, value, foot]) => `
+          <div class="metric">
+            <div class="metric-label">${escapeHtml(label)}</div>
+            <span class="metric-value">${escapeHtml(value)}</span>
+            <div class="metric-foot">${escapeHtml(foot)}</div>
+          </div>
+        `)
+        .join("");
+    }
+
+    function renderGlossary() {
+      const glossary = data.glossary || [];
+      if (!glossary.length) {
+        $("#glossary").innerHTML = `<div class="empty">terms: 0 · status: no confirmed glossary entries</div>`;
+        return;
+      }
+
+      $("#glossary").innerHTML = `
+        <div class="intent-grid">
+          <div class="intent-row header">
+            <div class="intent-cell">Source</div>
+            <div class="intent-cell">Target</div>
+            <div class="intent-cell">Evidence</div>
+          </div>
+          ${glossary.map((term) => `
+            <div class="intent-row">
+              <div class="intent-cell mono">${escapeHtml(field(term, "source", "term", "id"))}</div>
+              <div class="intent-cell"><strong>${escapeHtml(field(term, "target", "translation", "zh"))}</strong></div>
+              <div class="intent-cell mono">${escapeHtml(field(term, "note", "notes", "status") || "confirmed: true")}</div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    function renderIssue(issue, fallbackSegmentId) {
+      const severity = field(issue, "severity") || "open";
+      const type = field(issue, "type", "category") || "issue";
+      const note = field(issue, "note", "message", "description") || "";
+      const status = field(issue, "status") || "open";
+      const issueId = field(issue, "id");
+      const segmentId = field(issue, "segment_id", "segmentId") || fallbackSegmentId || "";
+      return `
+        <div class="issue">
+          <strong>${escapeHtml(type)}</strong>
+          <div class="text-block">${escapeHtml(note)}</div>
+          <div class="evidence">${issueId ? `id: ${escapeHtml(issueId)} · ` : ""}status: ${escapeHtml(status)} · severity: ${escapeHtml(severity)}${segmentId ? ` · target: ${escapeHtml(segmentId)}` : ""}</div>
+        </div>
+      `;
+    }
+
+    function renderChunks() {
+      const chunks = data.chunks || [];
+      if (!chunks.length) {
+        $("#chunks").innerHTML = `<div class="empty">chunks: 0 · status: no translation chunks loaded</div>`;
+        return;
+      }
+
+      $("#chunks").innerHTML = chunks
+        .map((chunk, index) => {
+          const state = stateClass(chunk.state);
+          const issueCount = chunkIssueCount(chunk);
+          const isBlocked = chunkIsBlocked(chunk);
+          const segmentCount = (chunk.segments || []).length;
+          const openAttribute = issueCount || isBlocked || index === 0 ? " open" : "";
+          return `
+            <details class="chunk-card" data-has-issues="${issueCount > 0}" data-is-blocked="${isBlocked}"${openAttribute}>
+              <summary>
+                <span class="chunk-title">
+                  <strong>${escapeHtml(chunk.id)} · ${escapeHtml(chunk.title || "Untitled chunk")}</strong>
+                  <span>${escapeHtml(chunk.summary || chunk.source_summary || "")}</span>
+                </span>
+                <span class="count-badge">${escapeHtml(plural(segmentCount, "segment", "segments"))}</span>
+                <span class="state-badge ${escapeHtml(state)}">${escapeHtml(chunk.state || "pending")}</span>
+              </summary>
+              <div class="chunk-body">
+                ${chunk.summary || chunk.source_summary ? `<p class="chunk-summary">${escapeHtml(chunk.summary || chunk.source_summary)}</p>` : ""}
+                <div class="overflow-wrap">
+                  <div class="segment-grid">
+                    <div class="segment-row header">
+                      <div class="segment-cell">Anchor</div>
+                      <div class="segment-cell">Source</div>
+                      <div class="segment-cell">Target</div>
+                    </div>
+                    ${(chunk.segments || []).map((seg) => `
+                      <div class="segment-row" id="${escapeHtml(seg.id)}">
+                        <div class="segment-cell segment-id">${escapeHtml(seg.id || chunk.id)}${seg.status || seg.state ? `<div>${escapeHtml(seg.status || seg.state)}</div>` : ""}</div>
+                        <div class="segment-cell text-block">${escapeHtml(field(seg, "source", "source_markdown"))}</div>
+                        <div class="segment-cell text-block target-block">${escapeHtml(field(seg, "target", "target_markdown", "translation"))}</div>
+                      </div>
+                    `).join("")}
+                    ${segmentCount === 0 ? `
+                      <div class="segment-row">
+                        <div class="segment-cell segment-id">${escapeHtml(chunk.id)}</div>
+                        <div class="segment-cell text-block">No segment rows.</div>
+                        <div class="segment-cell text-block target-block">Provide chunk-level or segment-level translation data before review.</div>
+                      </div>
+                    ` : ""}
+                  </div>
+                </div>
+                ${Array.isArray(chunk.issues) && chunk.issues.length ? `
+                  <div class="issue-list">
+                    ${chunk.issues.map((issue) => renderIssue(issue, chunk.id)).join("")}
+                  </div>
+                ` : ""}
+                ${(chunk.segments || []).some((seg) => Array.isArray(seg.issues) && seg.issues.length) ? `
+                  <div class="issue-list">
+                    ${(chunk.segments || []).flatMap((seg) => (seg.issues || []).map((issue) => renderIssue(issue, seg.id))).join("")}
+                  </div>
+                ` : ""}
+              </div>
+            </details>
+          `;
+        })
+        .join("");
+    }
+
+    function renderReviewNotes() {
+      const stats = data.stats || {};
+      const chunks = data.chunks || [];
+      const issueCount = statNumber(stats, "openIssues", "open_issues", "issues", "issueCount", "issue_count") ?? chunks.reduce((sum, chunk) => sum + chunkIssueCount(chunk), 0);
+      const blockedCount = statBlockedCount(stats, chunks);
+      const total = statNumber(stats, "chunks", "chunkCount", "chunk_count") ?? chunks.length;
+      const reviewed = statNumber(stats, "reviewed", "reviewedCount", "reviewed_count") ?? chunks.filter(chunkIsReviewed).length;
+      const ready = total > 0 && issueCount === 0 && blockedCount === 0 && reviewed === total;
+
+      $("#review-notes").innerHTML = `
+        <div class="info-card">
+          <h3>导出状态：${ready ? "可导出" : "暂缓"}</h3>
+          <p>${ready ? "所有 chunk 已审校，且没有打开的 issue 或 stale/blocked 状态。" : "导出前先处理 open issue、stale chunk、blocked chunk 与未审校段落。"}</p>
+          <div class="evidence">chunks: ${escapeHtml(total)} · reviewed: ${escapeHtml(reviewed)} · issues: ${escapeHtml(issueCount)} · blocked_or_stale: ${escapeHtml(blockedCount)}</div>
+        </div>
+        <div class="info-card">
+          <h3>审校重点：术语与覆盖</h3>
+          <p>检查 source anchor、术语一致性、target 空值、跨 chunk 指代与高严重度问题。全局术语变化应先产生 impact report，再标记受影响 chunk。</p>
+          <div class="evidence">rules: glossary impact · marker preservation · export policy</div>
+        </div>
+      `;
+    }
+
+    function bindTabs() {
+      const buttons = Array.from(document.querySelectorAll("#chunk-tabs button"));
+      const cards = () => Array.from(document.querySelectorAll(".chunk-card"));
+      const empty = document.querySelector("#chunk-filter-empty");
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => {
+          const filter = button.dataset.filter;
+          buttons.forEach((item) => {
+            const active = item === button;
+            item.classList.toggle("active", active);
+            item.setAttribute("aria-pressed", String(active));
+          });
+          let visibleCount = 0;
+          cards().forEach((card) => {
+            const visible =
+              filter === "all" ||
+              (filter === "issues" && card.dataset.hasIssues === "true") ||
+              (filter === "blocked" && card.dataset.isBlocked === "true");
+            card.hidden = !visible;
+            if (visible) visibleCount += 1;
+          });
+          if (empty) {
+            const label = button.textContent.trim();
+            empty.textContent = `filter: ${label} · matches: ${visibleCount}`;
+            empty.classList.toggle("visible", visibleCount === 0);
+          }
+        });
+      });
+    }
+
+    function bindMainTabs() {
+      const buttons = Array.from(document.querySelectorAll(".top-nav [role='tab']"));
+      const panels = Array.from(document.querySelectorAll(".panel"));
+
+      function activate(button, shouldFocus = false) {
+        const panelId = button.dataset.panel;
+        buttons.forEach((item) => {
+          const active = item === button;
+          item.classList.toggle("active", active);
+          item.setAttribute("aria-selected", String(active));
+          item.tabIndex = active ? 0 : -1;
+        });
+        panels.forEach((panel) => {
+          panel.hidden = panel.id !== panelId;
+        });
+        if (shouldFocus) button.focus();
+      }
+
+      buttons.forEach((button, index) => {
+        button.tabIndex = button.classList.contains("active") ? 0 : -1;
+        button.addEventListener("click", () => activate(button));
+        button.addEventListener("keydown", (event) => {
+          const keyMap = {
+            ArrowRight: 1,
+            ArrowDown: 1,
+            ArrowLeft: -1,
+            ArrowUp: -1,
+          };
+          if (event.key === "Home") {
+            event.preventDefault();
+            activate(buttons[0], true);
+            return;
+          }
+          if (event.key === "End") {
+            event.preventDefault();
+            activate(buttons[buttons.length - 1], true);
+            return;
+          }
+          if (!(event.key in keyMap)) return;
+          event.preventDefault();
+          const nextIndex = (index + keyMap[event.key] + buttons.length) % buttons.length;
+          activate(buttons[nextIndex], true);
+        });
+      });
+    }
+
+    renderMeta();
+    renderStats();
+    renderGlossary();
+    renderChunks();
+    renderReviewNotes();
+    bindMainTabs();
+    bindTabs();
+  </script>
+</body>
+</html>

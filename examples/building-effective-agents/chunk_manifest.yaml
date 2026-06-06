@@ -1,0 +1,279 @@
+chunks:
+  - id: c01.intro
+    title: "Title and lead paragraphs"
+    source_anchor: "source/original.md#lines-1-9"
+    source_summary: "文章标题、发布日期与三段导语；阐述作者观察：成功的 LLM agent 实现多用简单可组合模式而非复杂框架。"
+    chunk_type: introduction
+    semantic_role: framing
+    state: reviewed
+    must_preserve:
+      - 标题原文
+      - 日期 Published Dec 19, 2024
+      - 第一段与第二段的对比关系（前者简略、后者展开 LLM 缩写）
+    coverage:
+      start: 1
+      end: 9
+      confidence: high
+
+  - id: c02.what_are_agents
+    title: "What are agents?"
+    source_anchor: "source/original.md#lines-11-18"
+    source_summary: "给出 Anthropic 对 agent 的定义，并区分 workflows 与 agents；明确本文统一使用 agentic systems 一词涵盖两者。"
+    chunk_type: definition
+    semantic_role: terminology_setup
+    state: reviewed
+    must_preserve:
+      - "agentic systems / workflows / agents 三个加粗术语"
+      - 区分 workflows（按预定义代码路径编排）与 agents（动态自决）
+      - 提及 Appendix 1 (Agents in Practice)
+    coverage:
+      start: 11
+      end: 18
+      confidence: high
+
+  - id: c03.when_to_use
+    title: "When (and when not) to use agents"
+    source_anchor: "source/original.md#lines-20-24"
+    source_summary: "建议从最简方案出发，仅在确有必要时增加复杂度；workflows 适合定义明确的任务，agents 适合需要灵活性与模型决策的场景。"
+    chunk_type: guidance
+    semantic_role: principle
+    state: reviewed
+    must_preserve:
+      - 推迟复杂度（trade latency and cost）的取舍
+      - workflows vs agents 的选型判据
+    coverage:
+      start: 20
+      end: 24
+      confidence: high
+
+  - id: c04.frameworks
+    title: "When and how to use frameworks"
+    source_anchor: "source/original.md#lines-26-39"
+    source_summary: "列出 4 个常见 agentic 框架（Claude Agent SDK、Strands Agents SDK、Rivet、Vellum）；警告抽象层会掩盖底层 prompt 并诱发过度工程化；建议先直连 LLM API。"
+    chunk_type: section
+    semantic_role: framework_overview
+    state: reviewed
+    must_preserve:
+      - 4 个框架产品名与超链接
+      - "抽象层掩盖 prompts ​​and responses" 这一关键论断
+      - cookbook 链接
+    coverage:
+      start: 26
+      end: 39
+      confidence: high
+
+  - id: c05.building_blocks_intro
+    title: "Building blocks, workflows, and agents (intro)"
+    source_anchor: "source/original.md#lines-41-43"
+    source_summary: "本章的总体路线图：从 augmented LLM 这个基础块出发，逐步叠加到 autonomous agent。"
+    chunk_type: section_intro
+    semantic_role: roadmap
+    state: reviewed
+    must_preserve:
+      - 渐进式复杂度递增的论述逻辑
+    coverage:
+      start: 41
+      end: 43
+      confidence: high
+
+  - id: c06.augmented_llm
+    title: "Building block: The augmented LLM"
+    source_anchor: "source/original.md#lines-45-53"
+    source_summary: "基础构建块：通过 retrieval、tools、memory 增强的 LLM；推荐使用 Model Context Protocol (MCP) 接入第三方工具生态。"
+    chunk_type: building_block
+    semantic_role: foundational_pattern
+    state: reviewed
+    must_preserve:
+      - 配图 ![The augmented LLM](assets/01-augmented-llm.png)
+      - Model Context Protocol 与 MCP client 链接
+      - 末段对全文假设的声明
+    coverage:
+      start: 45
+      end: 53
+      confidence: high
+
+  - id: c07.prompt_chaining
+    title: "Workflow: Prompt chaining"
+    source_anchor: "source/original.md#lines-55-66"
+    source_summary: "Prompt chaining 模式：把任务拆成步骤链，每步 LLM 处理上一步输出，中间可加 gate 检查；适合可清晰拆分的固定子任务。"
+    chunk_type: workflow
+    semantic_role: pattern_description
+    state: reviewed
+    must_preserve:
+      - 配图 ![The prompt chaining workflow](assets/02-prompt-chaining.png)
+      - 两个示例（营销文案翻译、文档大纲生成）
+    coverage:
+      start: 55
+      end: 66
+      confidence: high
+
+  - id: c08.routing
+    title: "Workflow: Routing"
+    source_anchor: "source/original.md#lines-68-80"
+    source_summary: "Routing 模式：对输入分类后路由到专精的下游任务；适合存在明显类别且分类准确的复杂任务。"
+    chunk_type: workflow
+    semantic_role: pattern_description
+    state: reviewed
+    must_preserve:
+      - 配图 ![The routing workflow](assets/03-routing.png)
+      - 模型路由示例（Haiku 4.5 vs Sonnet 4.5）
+      - 产品名 Haiku 4.5 / Sonnet 4.5 保留原文
+    coverage:
+      start: 68
+      end: 80
+      confidence: high
+
+  - id: c09.parallelization
+    title: "Workflow: Parallelization"
+    source_anchor: "source/original.md#lines-81-99"
+    source_summary: "Parallelization 两种变体：Sectioning（拆分子任务并行）与 Voting（同一任务多 prompt 投票）；适合提速或需要多视角验证的场景。"
+    chunk_type: workflow
+    semantic_role: pattern_description
+    state: reviewed
+    must_preserve:
+      - 配图 ![The parallelization workflow](assets/04-parallelization.png)
+      - Sectioning 与 Voting 的加粗定义
+      - Guardrails / evals / 漏洞审查 / 内容审核 4 个具体示例
+    coverage:
+      start: 81
+      end: 99
+      confidence: high
+
+  - id: c10.orchestrator_workers
+    title: "Workflow: Orchestrator-workers"
+    source_anchor: "source/original.md#lines-101-112"
+    source_summary: "中央 LLM 动态拆任务并委派给 worker LLM，再汇总结果；与 parallelization 区别在于子任务在运行时才确定。"
+    chunk_type: workflow
+    semantic_role: pattern_description
+    state: reviewed
+    must_preserve:
+      - 配图 ![The orchestrator-workers workflow](assets/05-orchestrator-workers.png)
+      - 与 parallelization 的关键区分（subtasks aren't pre-defined）
+      - 原文用 "topographically similar"，此为 typo（应为 topologically），译时需保留 typo 或加注
+    coverage:
+      start: 101
+      end: 112
+      confidence: high
+
+  - id: c11.evaluator_optimizer
+    title: "Workflow: Evaluator-optimizer"
+    source_anchor: "source/original.md#lines-114-125"
+    source_summary: "一个 LLM 生成、另一个 LLM 评估反馈的循环；适合有清晰评估标准且迭代精化能带来可衡量价值的场景。"
+    chunk_type: workflow
+    semantic_role: pattern_description
+    state: reviewed
+    must_preserve:
+      - 配图 ![The evaluator-optimizer workflow](assets/06-evaluator-optimizer.png)
+      - 文学翻译与多轮搜索这两个示例
+    coverage:
+      start: 114
+      end: 125
+      confidence: high
+
+  - id: c12.agents
+    title: "Agents"
+    source_anchor: "source/original.md#lines-127-146"
+    source_summary: "Agents 自主规划与执行多步任务，使用工具并可回到 human-in-the-loop；适合开放问题与不可硬编码路径的任务；列出 coding agent 与 computer use 两个示例。"
+    chunk_type: agentic_system
+    semantic_role: pattern_description
+    state: reviewed
+    must_preserve:
+      - 配图 ![Autonomous agent](assets/07-autonomous-agent.png)
+      - 配图 ![High-level flow of a coding agent](assets/08-coding-agent-flow.png)
+      - SWE-bench / computer use 链接与产品名
+      - 工具集设计的关键性论述（best practices for tool development 指向 Appendix 2）
+    coverage:
+      start: 127
+      end: 146
+      confidence: high
+
+  - id: c13.combining
+    title: "Combining and customizing these patterns"
+    source_anchor: "source/original.md#lines-148-150"
+    source_summary: "强调上述模式非处方，可按需组合；与任何 LLM 功能一样，关键是测量与迭代，仅在确有提升时增加复杂度。"
+    chunk_type: guidance
+    semantic_role: principle
+    state: reviewed
+    must_preserve:
+      - "These building blocks aren't prescriptive" 这句核心立场
+    coverage:
+      start: 148
+      end: 150
+      confidence: high
+
+  - id: c14.summary
+    title: "Summary and three core principles"
+    source_anchor: "source/original.md#lines-152-166"
+    source_summary: "总结：成功率取决于选对系统而非最复杂系统；提出三条核心原则：simplicity / transparency / agent-computer interface (ACI)；并附 acknowledgements。"
+    chunk_type: summary
+    semantic_role: takeaway
+    state: reviewed
+    must_preserve:
+      - 三条加粗原则 simplicity / transparency / ACI
+      - "Written by Erik S. and Barry Zhang" 致谢
+    coverage:
+      start: 152
+      end: 166
+      confidence: high
+
+  - id: c15.appendix1_intro
+    title: "Appendix 1: Agents in practice (intro)"
+    source_anchor: "source/original.md#lines-168-171"
+    source_summary: "Appendix 1 引入：两个 agent 实际应用领域，均需对话+动作、明确成功标准、可反馈循环、人类监督。"
+    chunk_type: appendix_intro
+    semantic_role: framing
+    state: reviewed
+    must_preserve:
+      - 四项共性条件（conversation+action / clear success / feedback loop / human oversight）
+    coverage:
+      start: 168
+      end: 171
+      confidence: high
+
+  - id: c16.customer_support
+    title: "A. Customer support"
+    source_anchor: "source/original.md#lines-172-181"
+    source_summary: "客服场景适配 agents：自然对话流 + 外部数据/动作接入 + 退款等可编程动作 + 用户定义的成功衡量。"
+    chunk_type: appendix_section
+    semantic_role: case_study
+    state: reviewed
+    must_preserve:
+      - 4 条加粗论据
+      - 按结果计费（usage-based pricing）的商业信号
+    coverage:
+      start: 172
+      end: 181
+      confidence: high
+
+  - id: c17.coding_agents
+    title: "B. Coding agents"
+    source_anchor: "source/original.md#lines-183-192"
+    source_summary: "编码场景适配 agents：测试可验证、反馈可迭代、问题空间明确、质量可衡量；SWE-bench Verified 上 Anthropic 已能基于 PR 描述解 GitHub issue。"
+    chunk_type: appendix_section
+    semantic_role: case_study
+    state: reviewed
+    must_preserve:
+      - 4 条加粗论据
+      - SWE-bench Verified 链接
+      - human review 仍必要的提醒
+    coverage:
+      start: 183
+      end: 192
+      confidence: high
+
+  - id: c18.appendix2
+    title: "Appendix 2: Prompt engineering your tools"
+    source_anchor: "source/original.md#lines-194-213"
+    source_summary: "工具即 agent 的人机接口（ACI）。给出工具格式建议（给足思考 token、贴近自然文本、避免格式开销）与 4 条 ACI 设计准则；SWE-bench 工具设计经验：强制绝对路径显著减少错误。"
+    chunk_type: appendix_section
+    semantic_role: methodology
+    state: reviewed
+    must_preserve:
+      - 工具定义与 tool use block 概念
+      - ACI 与 HCI 的类比
+      - Poka-yoke 链接与日文术语保留
+      - 强制绝对路径这一具体经验
+    coverage:
+      start: 194
+      end: 213
+      confidence: high

@@ -1,0 +1,52 @@
+{"source": "agent", "target_candidates": ["智能体", "代理", "Agent"], "scope": "global", "context": "Anthropic 文档中指 LLM-driven autonomous system。中文 AI 工程社区常见译法为「智能体」。", "status": "proposed"}
+{"source": "agents", "target_candidates": ["智能体", "代理"], "scope": "global", "context": "agent 复数。", "status": "proposed"}
+{"source": "agentic system", "target_candidates": ["智能体系统", "代理系统"], "scope": "global", "context": "Anthropic 用来涵盖 workflows + agents 的统称。", "status": "proposed"}
+{"source": "agentic systems", "target_candidates": ["智能体系统", "代理系统"], "scope": "global", "context": "agentic system 复数。", "status": "proposed"}
+{"source": "workflow", "target_candidates": ["工作流", "工作流程"], "scope": "global", "context": "Anthropic 与 workflows vs agents 对比中。中文常见「工作流」。", "status": "proposed"}
+{"source": "workflows", "target_candidates": ["工作流", "工作流程"], "scope": "global", "context": "workflow 复数。", "status": "proposed"}
+{"source": "LLM", "target_candidates": ["LLM", "大语言模型"], "scope": "global", "context": "Large Language Model。首次出现时建议全称译法，括号注 LLM；后续保留 LLM。", "status": "proposed"}
+{"source": "LLMs", "target_candidates": ["LLM", "大语言模型"], "scope": "global", "context": "LLM 复数。", "status": "proposed"}
+{"source": "large language model", "target_candidates": ["大语言模型"], "scope": "global", "context": "LLM 全称。", "status": "proposed"}
+{"source": "augmented LLM", "target_candidates": ["增强型 LLM", "增强 LLM"], "scope": "global", "context": "Anthropic 提出的基础构建块：retrieval + tools + memory。", "status": "proposed"}
+{"source": "building block", "target_candidates": ["构建块", "基础构件"], "scope": "global", "context": "指 augmented LLM 与各种 workflow pattern。", "status": "proposed"}
+{"source": "prompt chaining", "target_candidates": ["提示链", "Prompt 链式调用"], "scope": "global", "context": "workflow pattern 之一。", "status": "proposed"}
+{"source": "routing", "target_candidates": ["路由", "分流"], "scope": "global", "context": "workflow pattern 之一，输入分类后路由到专精下游任务。", "status": "proposed"}
+{"source": "parallelization", "target_candidates": ["并行化", "并行"], "scope": "global", "context": "workflow pattern 之一。", "status": "proposed"}
+{"source": "sectioning", "target_candidates": ["分块", "分段", "拆解并行"], "scope": "global", "context": "parallelization 的 Sectioning 变体：拆分子任务并行。", "status": "proposed"}
+{"source": "voting", "target_candidates": ["投票", "多路投票"], "scope": "global", "context": "parallelization 的 Voting 变体：同一任务多次取多样化输出。", "status": "proposed"}
+{"source": "orchestrator-workers", "target_candidates": ["编排者-工作者", "编排器-工作者", "主从编排"], "scope": "global", "context": "workflow pattern 之一，中心 LLM 拆任务委派给 worker LLM。", "status": "proposed"}
+{"source": "evaluator-optimizer", "target_candidates": ["评估者-优化者", "评估-优化循环"], "scope": "global", "context": "workflow pattern 之一，生成+评估双 LLM 循环。", "status": "proposed"}
+{"source": "agent-computer interface", "target_candidates": ["智能体-计算机接口", "ACI"], "scope": "global", "context": "Anthropic 造词，对应 HCI 的 agent 版。", "status": "proposed"}
+{"source": "ACI", "target_candidates": ["ACI", "智能体-计算机接口"], "scope": "global", "context": "agent-computer interface 缩写。", "status": "proposed"}
+{"source": "human-computer interfaces", "target_candidates": ["人机界面", "HCI"], "scope": "global", "context": "HCI 全称。", "status": "proposed"}
+{"source": "HCI", "target_candidates": ["HCI"], "scope": "global", "context": "human-computer interfaces 缩写。", "status": "proposed"}
+{"source": "guardrails", "target_candidates": ["护栏", "安全护栏"], "scope": "global", "context": "parallelization sectioning 示例：内容审核/安全过滤。", "status": "proposed"}
+{"source": "in-context examples", "target_candidates": ["上下文示例", "in-context 示例"], "scope": "global", "context": "指 prompt 中放入的 few-shot 示例。", "status": "proposed"}
+{"source": "retrieval", "target_candidates": ["检索"], "scope": "global", "context": "augmented LLM 的能力之一。", "status": "proposed"}
+{"source": "tools", "target_candidates": ["工具"], "scope": "global", "context": "augmented LLM 能力之一 + agent 行为核心。", "status": "proposed"}
+{"source": "memory", "target_candidates": ["记忆", "记忆能力"], "scope": "global", "context": "augmented LLM 能力之一。", "status": "proposed"}
+{"source": "Model Context Protocol", "target_candidates": ["Model Context Protocol", "MCP（模型上下文协议）"], "scope": "global", "context": "Anthropic 提出的协议名；首次建议保留英文并加中文括注。", "status": "proposed"}
+{"source": "MCP", "target_candidates": ["MCP"], "scope": "global", "context": "Model Context Protocol 缩写。", "status": "proposed"}
+{"source": "tool use", "target_candidates": ["工具调用", "工具使用"], "scope": "global", "context": "Claude 调用外部工具的能力。", "status": "proposed"}
+{"source": "tool use block", "target_candidates": ["tool use block", "工具使用块"], "scope": "global", "context": "Anthropic API 响应中表示工具调用的字段。", "status": "proposed"}
+{"source": "Poka-yoke", "target_candidates": ["Poka-yoke", "防错法", "防呆法"], "scope": "global", "context": "日语借词，意为「防错设计」；保留原文 + 中文括注更稳。", "status": "proposed"}
+{"source": "SWE-bench", "target_candidates": ["SWE-bench", "SWE-bench 基准"], "scope": "global", "context": "Anthropic 基准名，首次建议加中文括注。", "status": "proposed"}
+{"source": "SWE-bench Verified", "target_candidates": ["SWE-bench Verified"], "scope": "global", "context": "SWE-bench 的 verified 子集。", "status": "proposed"}
+{"source": "computer use", "target_candidates": ["computer use", "计算机使用"], "scope": "global", "context": "Anthropic 的「让 Claude 操作计算机」参考实现名。", "status": "proposed"}
+{"source": "Claude Agent SDK", "target_candidates": ["Claude Agent SDK"], "scope": "global", "context": "产品名，保留原文。", "status": "proposed"}
+{"source": "Strands Agents SDK by AWS", "target_candidates": ["Strands Agents SDK（AWS）"], "scope": "global", "context": "产品名，保留原文。", "status": "proposed"}
+{"source": "Rivet", "target_candidates": ["Rivet"], "scope": "global", "context": "产品名，保留原文。", "status": "proposed"}
+{"source": "Vellum", "target_candidates": ["Vellum"], "scope": "global", "context": "产品名，保留原文。", "status": "proposed"}
+{"source": "Claude Haiku 4.5", "target_candidates": ["Claude Haiku 4.5"], "scope": "global", "context": "模型名，保留原文。", "status": "proposed"}
+{"source": "Claude Sonnet 4.5", "target_candidates": ["Claude Sonnet 4.5"], "scope": "global", "context": "模型名，保留原文。", "status": "proposed"}
+{"source": "Anthropic", "target_candidates": ["Anthropic"], "scope": "global", "context": "公司名，保留原文。", "status": "proposed"}
+{"source": "cookbook", "target_candidates": ["cookbook", "Cookbook", "实践手册"], "scope": "global", "context": "Anthropic 文档站 cookbook 链接。", "status": "proposed"}
+{"source": "workbench", "target_candidates": ["workbench", "Workbench", "工作台"], "scope": "global", "context": "Anthropic 控制台中的 workbench 工具。", "status": "proposed"}
+{"source": "feedback loop", "target_candidates": ["反馈循环"], "scope": "global", "context": "agents 应用共性之一。", "status": "proposed"}
+{"source": "human oversight", "target_candidates": ["人类监督", "人工监督"], "scope": "global", "context": "agents 应用共性之一。", "status": "proposed"}
+{"source": "ground truth", "target_candidates": ["真实信号", "ground truth", "事实依据"], "scope": "global", "context": "指 agent 在执行中获得的工具调用/代码执行等环境反馈。", "status": "proposed"}
+{"source": "stopping conditions", "target_candidates": ["停止条件"], "scope": "global", "context": "agents 的迭代终止条件。", "status": "proposed"}
+{"source": "evals", "target_candidates": ["evals", "评估流程"], "scope": "global", "context": "evaluations 的缩写，自动化评估 LLM 表现。", "status": "proposed"}
+{"source": "usage-based pricing", "target_candidates": ["按用量计费", "按效果计费"], "scope": "global", "context": "客服 agent 按成功解决量计费的商业模式。", "status": "proposed"}
+{"source": "documentation and testing", "target_candidates": ["文档与测试"], "scope": "global", "context": "ACI 设计的核心动作。", "status": "proposed"}
+{"source": "junior developer", "target_candidates": ["初级开发者", "新人开发者"], "scope": "global", "context": "tool docstring 设计的比喻。", "status": "proposed"}

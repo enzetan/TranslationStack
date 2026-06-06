@@ -1,0 +1,24 @@
+{
+  "generated_at": "2026-06-06T12:15:00Z",
+  "project_id": "building-effective-agents",
+  "chunks": [
+    {"id": "c01.intro", "state": "exported", "translation_files": ["translations/chunks/01-intro.jsonl"]},
+    {"id": "c02.what_are_agents", "state": "exported", "translation_files": ["translations/chunks/01-intro.jsonl"]},
+    {"id": "c03.when_to_use", "state": "exported", "translation_files": ["translations/chunks/01-intro.jsonl"]},
+    {"id": "c04.frameworks", "state": "exported", "translation_files": ["translations/chunks/01-intro.jsonl"]},
+    {"id": "c05.building_blocks_intro", "state": "exported", "translation_files": ["translations/chunks/01-intro.jsonl"]},
+    {"id": "c06.augmented_llm", "state": "exported", "translation_files": ["translations/chunks/01-intro.jsonl"]},
+    {"id": "c07.prompt_chaining", "state": "exported", "translation_files": ["translations/chunks/02-patterns.jsonl"]},
+    {"id": "c08.routing", "state": "exported", "translation_files": ["translations/chunks/02-patterns.jsonl"]},
+    {"id": "c09.parallelization", "state": "exported", "translation_files": ["translations/chunks/02-patterns.jsonl"]},
+    {"id": "c10.orchestrator_workers", "state": "exported", "translation_files": ["translations/chunks/02-patterns.jsonl"]},
+    {"id": "c11.evaluator_optimizer", "state": "exported", "translation_files": ["translations/chunks/02-patterns.jsonl"]},
+    {"id": "c12.agents", "state": "exported", "translation_files": ["translations/chunks/02-patterns.jsonl"]},
+    {"id": "c13.combining", "state": "exported", "translation_files": ["translations/chunks/02-patterns.jsonl"]},
+    {"id": "c14.summary", "state": "exported", "translation_files": ["translations/chunks/03-summary.jsonl"]},
+    {"id": "c15.appendix1_intro", "state": "exported", "translation_files": ["translations/chunks/03-summary.jsonl"]},
+    {"id": "c16.customer_support", "state": "exported", "translation_files": ["translations/chunks/03-summary.jsonl"]},
+    {"id": "c17.coding_agents", "state": "exported", "translation_files": ["translations/chunks/03-summary.jsonl"]},
+    {"id": "c18.appendix2", "state": "exported", "translation_files": ["translations/chunks/03-summary.jsonl"]}
+  ]
+}
