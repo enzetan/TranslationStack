@@ -1,0 +1,30 @@
+{
+  "run_id": "run-2026-06-06-draft-qa-v1",
+  "type": "draft_qa",
+  "execution_mode": "ultracode",
+  "tool_used": "Workflow",
+  "started_at": "2026-06-06T11:55:00Z",
+  "ended_at": "2026-06-06T11:56:00Z",
+  "inputs": [
+    "source/original.md",
+    "chunk_manifest.yaml",
+    "project_brief.json",
+    "glossary/glossary.yaml",
+    "style/style_guide.yaml",
+    "translations/chunks/01-intro.jsonl",
+    "translations/chunks/02-patterns.jsonl",
+    "translations/chunks/03-summary.jsonl"
+  ],
+  "outputs": [
+    "review/draft_qa_report.json"
+  ],
+  "stats": {
+    "chunks_checked": 18,
+    "image_refs_checked": 8,
+    "links_checked": 14,
+    "blocking_findings": 0
+  },
+  "limitations": [
+    "Draft QA checked contract-level preservation and obvious surface risks before sub-agent pre-review; it did not replace the later review lenses."
+  ]
+}

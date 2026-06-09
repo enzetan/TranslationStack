@@ -1,0 +1,26 @@
+{
+  "ok": true,
+  "generated_at": "2026-06-06T11:56:00Z",
+  "run_id": "run-2026-06-06-draft-qa-v1",
+  "checks": {
+    "glossary_violations": true,
+    "citation_reference_format": true,
+    "image_link_code_preservation": true,
+    "duplicate_words": true,
+    "impossible_references": true,
+    "empty_targets": true,
+    "addition_omission_scan": true
+  },
+  "stats": {
+    "chunks_checked": 18,
+    "image_refs_checked": 8,
+    "links_checked": 14,
+    "blocking_findings": 0,
+    "nonblocking_findings": 0
+  },
+  "findings": [],
+  "blocking_findings": [],
+  "limitations": [
+    "Draft QA used contract and surface checks before sub-agent pre-review; deeper style and accuracy findings were delegated to pre-review lenses."
+  ]
+}

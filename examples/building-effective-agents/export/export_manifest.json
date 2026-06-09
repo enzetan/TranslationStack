@@ -20,5 +20,11 @@
     {"id": "c16.customer_support", "state": "exported", "translation_files": ["translations/chunks/03-summary.jsonl"]},
     {"id": "c17.coding_agents", "state": "exported", "translation_files": ["translations/chunks/03-summary.jsonl"]},
     {"id": "c18.appendix2", "state": "exported", "translation_files": ["translations/chunks/03-summary.jsonl"]}
+  ],
+  "reusable_assets": [
+    {"type": "project_brief", "path": "project_brief.json", "import_status": "proposal", "note": "Source understanding and domain profile for future AI-engineering translation projects."},
+    {"type": "confirmed_glossary", "path": "glossary/glossary.yaml", "import_status": "proposal", "note": "Confirmed terms from this article; import into later projects as proposals unless the user promotes them."},
+    {"type": "style_guide", "path": "style/style_guide.yaml", "import_status": "proposal", "note": "Faithful technical Chinese style guidance and accepted samples."},
+    {"type": "translation_memory", "path": "memory/translation_memory.jsonl", "import_status": "proposal", "note": "Reusable translation memory examples from this project."}
   ]
 }

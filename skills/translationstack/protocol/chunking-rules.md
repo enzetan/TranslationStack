@@ -1,8 +1,8 @@
 # Chunking Rules
 
-TranslationStack uses large semantic chunks for translation and smaller optional segments for review anchors.
+Create large semantic chunks for translation. Create smaller segments only when review anchors are needed.
 
-For MVP, assume clean Markdown source. Do not design chunking around Pandoc-specific blocks, DOCX layout, PDF extraction, or EPUB spine structure.
+Start chunking only after the source has been accepted as clean Markdown. Do not chunk around Pandoc-specific blocks, DOCX layout, PDF extraction, or EPUB spine structure.
 
 ## Principle
 
@@ -28,7 +28,7 @@ Every chunk in `chunk_manifest.yaml` must include:
 - `coverage.end`
 - `coverage.confidence`
 
-`must_preserve` should list source features that need extra care.
+List source features that need extra care in `must_preserve`.
 
 ## Stable IDs
 
@@ -61,12 +61,12 @@ Avoid:
 - arbitrary token windows
 - splitting titles from bodies
 - splitting definitions from explanations
-- splitting scripture references from their discussion
+- splitting references, notes, or citations from the discussion they qualify
 - splitting tables from surrounding context
 
 ## Segments
 
-Segments are optional review anchors. Use them for:
+Create segments only when the project needs review anchors for:
 
 - issue targets
 - local revision targets

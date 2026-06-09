@@ -1,8 +1,8 @@
 # State Machine
 
-TranslationStack has two layers:
+Track two layers:
 
-- Project flow: the recommended order an agent should follow.
+- Project flow: the workflow order the agent must follow.
 - Chunk/segment lifecycle: the durable state of every translation unit.
 
 ## Valid States
@@ -50,5 +50,4 @@ exported
 - Do not export `pending`, `blocked`, or `stale` chunks.
 - Do not silently skip `reviewed` chunks when a glossary, style, source, or context change makes them stale.
 - `blocked` means stop and ask the user.
-- `stale` is not failure; it is the mechanism for targeted revision.
-
+- Use `stale` for targeted revision after glossary, style, source, or context changes.

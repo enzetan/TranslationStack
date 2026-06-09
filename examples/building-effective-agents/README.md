@@ -7,12 +7,13 @@ Source material: Anthropic's [Building effective agents](https://www.anthropic.c
 ## What To Inspect
 
 - `project.yaml` - project identity, language pair, translation policy, review policy, export policy, and execution mode.
+- `project_brief.json` - full-source understanding, coverage, audience, risks, and quality bar used before translation.
 - `source/original.md` - clean Markdown source with local image assets in `source/assets/`.
 - `chunk_manifest.yaml` - semantic chunk boundaries, source anchors, summaries, preservation rules, and states.
 - `glossary/glossary.yaml` - confirmed terminology decisions.
 - `style/style_guide.yaml` - translation register, preferences, anti-patterns, and examples.
 - `translations/chunks/` - translated chunk JSONL files.
-- `review/issues.jsonl` and `review/revisions.jsonl` - AI review findings and the durable revision trail.
+- `review/draft_qa_report.json`, `review/issues.jsonl`, and `review/revisions.jsonl` - draft QA, AI review findings, and the durable revision trail.
 - `runs/` - run records for translation, pre-review, and export.
 - `export/output.md` - exported Chinese Markdown.
 - `export/review.html` - static bilingual review page.
@@ -24,6 +25,10 @@ From the repository root:
 
 ```bash
 bun skills/translationstack/scripts/validate.mjs examples/building-effective-agents
+bun skills/translationstack/scripts/validate.mjs --phase pretranslate examples/building-effective-agents
+bun skills/translationstack/scripts/validate.mjs --phase translate examples/building-effective-agents
+bun skills/translationstack/scripts/validate.mjs --phase review examples/building-effective-agents
+bun skills/translationstack/scripts/validate.mjs --phase final examples/building-effective-agents
 ```
 
 Node fallback:
@@ -35,4 +40,3 @@ node skills/translationstack/scripts/validate.mjs examples/building-effective-ag
 ## Publication Note
 
 This demo includes third-party article text and images for protocol demonstration. Before publishing the repository publicly, confirm that the source article and image assets may be redistributed in this form, or replace them with original sample content.
-

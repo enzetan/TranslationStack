@@ -5,14 +5,14 @@
 //
 // Bun/Node compatible. Zero third-party dependencies.
 //
-// Adapted from the YAML parser used in skills/translationstack/scripts/validate.mjs
+// Adapted from the YAML parser used in skills/translationstack/scripts/validator/io.mjs
 // and the data assembly in .translationstack/building-effective-agents/export/render-review.mjs.
 // These were duplicated copies; this module is the canonical home going forward.
 
 import fs from "node:fs";
 import path from "node:path";
 
-// --- YAML parser (mirrors skills/translationstack/scripts/validate.mjs) ---
+// --- YAML parser (mirrors skills/translationstack/scripts/validator/io.mjs) ---
 
 const YAML_BLOCK_SCALAR_PATTERN = /^[|>][+-]?\d*$/;
 

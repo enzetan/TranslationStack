@@ -1,0 +1,56 @@
+{
+  "generated_at": "2026-06-06T11:45:00Z",
+  "source": {
+    "file": "source/original.md",
+    "line_count": 213
+  },
+  "coverage": {
+    "mode": "full",
+    "source_ranges": [
+      "source/original.md#lines-1-213"
+    ],
+    "limitations": []
+  },
+  "audience": "Chinese LLM application developers and technical readers",
+  "purpose": "Explain Anthropic's practical guidance for building effective LLM agents and workflows, with emphasis on simple composable patterns over complex frameworks.",
+  "genre": "Technical engineering article",
+  "tone": "Practical, measured, and developer-facing",
+  "domain": "AI engineering",
+  "thesis": "Effective agentic systems usually start from simple augmented LLM building blocks and only add workflow or agent complexity when evaluation shows that the added complexity improves outcomes.",
+  "structure": [
+    "Definition and scope of agents versus workflows",
+    "When to use agents and when not to add complexity",
+    "Framework guidance and augmented LLM building block",
+    "Five common workflow patterns",
+    "Guidance for combining patterns and applying core principles",
+    "Appendices on customer support, coding agents, and tool prompt engineering"
+  ],
+  "recurring_terms": [
+    "agent",
+    "workflow",
+    "augmented LLM",
+    "tool use",
+    "prompt chaining",
+    "routing",
+    "parallelization",
+    "orchestrator-workers",
+    "evaluator-optimizer",
+    "agent-computer interface"
+  ],
+  "risks": [
+    "Keep product names and model names unchanged.",
+    "Preserve image references and link targets exactly.",
+    "Distinguish tools as a general concept from tool use as an API capability.",
+    "Retain the author's caution against unnecessary complexity.",
+    "Preserve emphasis and Markdown structure in exported Chinese Markdown."
+  ],
+  "reference_policy": "Keep URLs, product names, model names, benchmark names, code-like terms, and Markdown image paths unchanged unless a glossary entry explicitly says otherwise.",
+  "quality_bar": "Publication-ready Chinese Markdown that is faithful to source logic, clear to technical readers, structurally aligned with the original, and free of unresolved medium+ blocking issues.",
+  "execution_signals": [
+    "medium_length_source",
+    "technical_domain",
+    "image_assets_present",
+    "main_loop_translation",
+    "sub_agent_pre_review"
+  ]
+}

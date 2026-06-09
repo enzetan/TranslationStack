@@ -49,6 +49,7 @@ DOCX, PDF, EPUB, Pandoc extensions, citation processors, bibliography tooling, a
 - `skills/translationstack/SKILL.md` - agent behavior contract
 - `skills/translationstack/protocol/` - project contract and workflow rules
 - `skills/translationstack/scripts/validate.mjs` - dependency-free contract validator
+- `skills/translationstack/scripts/validator/` - validator modules used by the CLI entrypoint
 - `skills/translationstack/templates/review.html` - static review template
 - `docs/` - public design, research, and implementation notes
 - `examples/` - user-visible demo TranslationStack projects
@@ -62,17 +63,20 @@ A TranslationStack project is written under `.translationstack/<project-id>/`:
 ├── project.yaml
 ├── source/original.md
 ├── chunk_manifest.yaml
+├── project_brief.json
 ├── glossary/glossary.yaml
 ├── glossary/glossary_proposals.jsonl
 ├── style/style_guide.yaml
 ├── translations/chunks/
+├── review/draft_qa_report.json
 ├── review/issues.jsonl
 ├── review/revisions.jsonl
 ├── memory/translation_memory.jsonl
 ├── export/review.html
 ├── export/output.md
 ├── export/export_manifest.json
-└── export/export_qa_report.json
+├── export/export_qa_report.json
+└── runs/*.json
 ```
 
 The files are the source of truth. Chat is only the working interface.
@@ -83,12 +87,17 @@ Preferred runner:
 
 ```bash
 bun skills/translationstack/scripts/validate.mjs .translationstack/<project-id>
+bun skills/translationstack/scripts/validate.mjs --phase pretranslate .translationstack/<project-id>
+bun skills/translationstack/scripts/validate.mjs --phase translate .translationstack/<project-id>
+bun skills/translationstack/scripts/validate.mjs --phase review .translationstack/<project-id>
+bun skills/translationstack/scripts/validate.mjs --phase final .translationstack/<project-id>
 ```
 
 Node fallback:
 
 ```bash
 node skills/translationstack/scripts/validate.mjs .translationstack/<project-id>
+node skills/translationstack/scripts/validate.mjs --phase final .translationstack/<project-id>
 ```
 
 When the skill is linked as a project-local skill, the same validator can be run through the linked path:
