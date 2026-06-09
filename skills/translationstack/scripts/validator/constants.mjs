@@ -48,8 +48,7 @@ export const FINAL_EXPORT_BLOCKING_ISSUE_TYPES = [
 ];
 export const MEDIUM_OR_HIGHER_SEVERITIES = ["medium", "high", "critical"];
 export const VALID_PHASES = ["pretranslate", "translate", "review", "final"];
-export const VALID_EXECUTION_MODES = ["sub-agent", "ultracode"];
-export const VALID_TOOLS_USED = ["Agent", "Workflow"];
+export const VALID_EXECUTION_MODES = ["sub-agent", "dynamic-workflow"];
 export const VALID_RUN_TYPES = [
   "source_understanding",
   "translate",

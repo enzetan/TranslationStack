@@ -5,7 +5,7 @@ TranslationStack uses Claude Code execution tools to fan out translation work, a
 ## Roles vs Modes
 
 - **Main loop role** (always present): dialogue, term/style decisions, batch dispatch, glossary sync, final merge. Not a translation mode.
-- **Fan-out modes** (picked per batch): `sub-agent` (default) or `ultracode`.
+- **Fan-out modes** (picked per batch): `sub-agent` (default) or `dynamic-workflow`.
 - **Translation and review always fan out.** Main loop is never a translation mode.
 
 ## Tools
@@ -26,11 +26,11 @@ Use the Agent tool for:
 
 Sub-agent output is advisory until the main loop merges it.
 
-### Ultracode (dynamic workflow, user-confirmed)
+### Dynamic Workflow (user-confirmed)
 
-Use Claude Code ultracode mode when the batch needs project-level orchestration, multi-phase structure, or a hard token budget. Use the `ultracode:` keyword. If the build does not yet have `ultracode`, fall back to the `workflow:` keyword.
+Use Claude Code dynamic workflow mode when the batch needs project-level orchestration, multi-phase structure, or a hard token budget. Use the `dynamic-workflow:` keyword.
 
-Do not treat ultracode output as durable truth by itself. The main loop must write accepted translations, issues, revisions, exports, and run records into TranslationStack project files.
+Do not treat dynamic-workflow output as durable truth by itself. The main loop must write accepted translations, issues, revisions, exports, and run records into TranslationStack project files.
 
 ## Data Flow
 
@@ -41,6 +41,29 @@ Every translation batch follows this flow:
 3. **Integration sub-agent** combines the Markdown slices into `translations/chunks/<chunk-id>.md`, then converts that Markdown into the contract JSONL matching `validator/core-rules.mjs` schema.
 4. **Main loop** validates against the project contract, runs draft QA, and keeps both `translations/chunks/<chunk-id>.md` and `translations/chunks/<chunk-id>.jsonl`.
 5. **Pre-review lenses** (sub-agents) write findings to `review/issues.jsonl`; main loop merges and de-duplicates.
+
+## Failure Recovery
+
+The Markdown file is the recoverable human-readable source of truth. If a sub-agent dies mid-batch:
+
+1. Inspect the partial `translations/chunks/<chunk-id>.<slice-id>.md` to see how far the slice got.
+2. Compare the partial Markdown to the corresponding source range line-by-line; identify the missing source range.
+3. Resume by re-firing the same sub-agent prompt with a narrowed source range (e.g. `lines 100-150 of <chunk_id>`). Do not re-run completed work.
+4. For multi-slice batches, the missing slice's `<chunk-id>.<slice-id>.md` is the signal — translate only that slice.
+5. Diffs are line-level (`diff old.md new.md`) and human-readable, unlike JSONL where diffs require un-escaping.
+
+This is the primary reason P0-1 was ranked highest: a partial JSONL return is unrecoverable; a partial MD is a clear resume point.
+
+## Cross-Check
+
+After the integration sub-agent produces `translations/chunks/<chunk-id>.jsonl`, the main loop (or the validator) cross-checks that:
+
+- `translations/chunks/<chunk-id>.md` exists alongside the JSONL.
+- The Markdown is non-empty.
+- The Markdown content matches the concatenated JSONL `target` (or `target_markdown`) after documented normalization (leading/trailing whitespace, blank-line normalization).
+- For multi-slice chunks, slice MDs concatenate in declared order to produce the final MD.
+
+The validator enforces this via `validateMarkdownCompanion` as a **non-blocking warning** (not an error). Mismatches should be resolved by the merge phase before exporting; persistent mismatches surface in `validate.mjs` output.
 
 ## Node Matrix
 
@@ -67,7 +90,7 @@ Every translation batch follows this flow:
 Pick the fan-out mode per batch before the batch starts:
 
 - **sub-agent** (default): when the batch's content translates independently and the batch finishes in one session.
-- **ultracode**: when the batch needs project-level orchestration, multi-phase structure, or a hard token budget. The main loop must offer it and the user must confirm.
+- **dynamic-workflow**: when the batch needs project-level orchestration, multi-phase structure, or a hard token budget. The main loop must offer it and the user must confirm.
 
 When the project needs a reusable execution default, write it to `project.yaml`:
 
@@ -78,9 +101,9 @@ execution:
 
 Record the actual mode used in `runs/<run-id>.json`, not in `project.yaml`.
 
-## When To Offer Ultracode
+## When To Offer Dynamic Workflow
 
-After `chunk_manifest.yaml` exists and before the batch starts, offer ultracode when at least two of these signals apply:
+After `chunk_manifest.yaml` exists and before the batch starts, offer dynamic-workflow when at least two of these signals apply:
 
 - many chunks in the batch
 - long source
@@ -112,9 +135,9 @@ Common lenses:
 
 Merge and de-duplicate findings in the main loop before writing `review/issues.jsonl`. Preserve the lens name in each issue when the lens affects later review or revision decisions.
 
-## Ultracode Shape
+## Dynamic Workflow Shape
 
-When the user confirms ultracode mode, the workflow script runs these phases per batch:
+When the user confirms dynamic-workflow mode, the workflow script runs these phases per batch:
 
 1. **Source-understanding phase**: fan out assigned source sections/ranges; each worker returns structured notes on thesis/purpose, structure, tone, terminology, motifs, references, risks, and local translation implications.
 2. **Brief merge phase**: main loop fans in notes, resolves contradictions, records coverage limits, and writes one durable source understanding / project brief before full translation.
@@ -129,7 +152,7 @@ Do not treat workflow intermediate files as final project state until the main l
 
 ## Run Evidence
 
-Every run that uses sub-agents or ultracode must have one `runs/<run-id>.json` record.
+Every run that uses sub-agents or dynamic-workflow must have one `runs/<run-id>.json` record.
 
 Sub-agents must not create or modify `runs/<run-id>.json`, `runs/*.json`, or `runs/agent_log.jsonl`. They return or write their assigned Markdown/temporary output only. The main loop or merge/integration phase writes run evidence after fan-in because only that layer has complete schema context, batch status, merge decisions, errors, retries, and limitations.
 
@@ -150,8 +173,7 @@ Minimum fields:
 
 - `run_id`
 - `type`: `source_understanding`, `translate`, `draft_qa`, `pre_review`, `review`, `export`, `workflow`, or another clear run type if the validator has been updated for it
-- `execution_mode`: `sub-agent` or `ultracode`
-- `tool_used`: `Agent` or `Workflow`
+- `execution_mode`: `sub-agent` or `dynamic-workflow`
 - `started_at`
 - `ended_at`
 - `inputs`: project files used by the run (include `from_run` references for cross-batch handoff)
@@ -163,7 +185,7 @@ For runs that used sub-agents, the main loop or merge/integration phase must als
 - `agents`: count plus each agent's role or lens
 - `merge_decisions`: findings kept, merged, rejected, or deferred
 
-For ultracode runs, also include:
+For dynamic-workflow runs, also include:
 
 - `workflow_script`: path and content hash
 - `phases` or `batches`
@@ -181,7 +203,7 @@ Append `runs/agent_log.jsonl` when a future agent needs a quick timeline before 
 - a batch boundary (start or end of a chapter/batch) — for cross-batch handoff
 - a blocker, retry, or partial failure
 - a validation result that controls whether work can continue
-- an ultracode batch boundary
+- a dynamic-workflow batch boundary
 - a non-obvious next action
 
 Each entry should point to the relevant `run_id` and list touched files. Do not repeat full inputs, outputs, agent reports, merge decisions, errors, retries, or limitations that already belong in `runs/<run-id>.json`.
@@ -196,6 +218,6 @@ Each entry should point to the relevant `run_id` and list touched files. Do not 
 - Do not write agent log entries for routine single-step edits unless they affect handoff or next action.
 - Do not begin full translation until whole-source understanding has been merged and recorded.
 - Do not record actual runtime mode in `project.yaml`; use `runs/<run-id>.json`.
-- Do not switch into ultracode mode mid-translation unless the user confirms the switch.
+- Do not switch into dynamic-workflow mode mid-translation unless the user confirms the switch.
 - Do not export until contract files are written and the validator result is reported.
 - Do not let one failed sub-agent batch halt the whole project when unaffected chunks can continue; split, retry, or mark only the affected unit as `blocked`.

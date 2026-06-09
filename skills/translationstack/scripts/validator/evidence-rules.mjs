@@ -7,7 +7,6 @@ import {
   VALID_RUN_TYPES,
   VALID_SEVERITIES,
   VALID_STATES,
-  VALID_TOOLS_USED,
   VALID_TRANSITIONS,
 } from "./constants.mjs";
 import {
@@ -129,7 +128,6 @@ export function validateRuns(projectDir, phase, errors, warnings) {
 
     assert(VALID_RUN_TYPES.includes(run.type), `${label}: invalid type ${run.type}`, errors);
     assert(VALID_EXECUTION_MODES.includes(run.execution_mode), `${label}: invalid execution_mode ${run.execution_mode}`, errors);
-    assert(VALID_TOOLS_USED.includes(run.tool_used), `${label}: invalid tool_used ${run.tool_used}`, errors);
     assertTimestamp(run.started_at, `${label}: started_at`, errors);
     assertTimestamp(run.ended_at, `${label}: ended_at`, errors);
     if (looksLikeTimestamp(run.started_at) && looksLikeTimestamp(run.ended_at)) {
@@ -154,7 +152,6 @@ export function validateRuns(projectDir, phase, errors, warnings) {
     }
 
     if (run.execution_mode === "sub-agent") {
-      assert(run.tool_used === "Agent", `${label}: sub-agent runs must use tool_used Agent`, errors);
       assert(isNonEmptyArray(run.agents), `${label}: sub-agent runs require agents`, errors);
       assert(isNonEmptyArray(run.merge_decisions), `${label}: sub-agent runs require merge_decisions`, errors);
       for (const [index, agent] of Array.isArray(run.agents) ? run.agents.entries() : []) {
@@ -163,7 +160,6 @@ export function validateRuns(projectDir, phase, errors, warnings) {
     }
 
     if (run.execution_mode === "dynamic-workflow") {
-      assert(run.tool_used === "DynamicWorkflow", `${label}: dynamic-workflow runs must use tool_used DynamicWorkflow`, errors);
       assert(run.workflow_script, `${label}: dynamic-workflow runs require workflow_script`, errors);
       assert(isNonEmptyString(run.workflow_script?.path), `${label}: workflow_script.path is required`, errors);
       assert(isNonEmptyString(run.workflow_script?.hash), `${label}: workflow_script.hash is required`, errors);

@@ -112,16 +112,16 @@ When the user asks to translate a long document:
 9. Calibrate style with representative sample translations before the full run when style is non-trivial.
    - Pick passages that cover the document's real range: dense concepts or technical content, narrative or argument flow, examples/application, citation- or reference-heavy content, proper names/foreign-language phrases, tone shifts, and rhetorically important passages.
    - Offer distinct style variants when more than one target voice is plausible, then write accepted samples into `style/style_guide.yaml` and `memory/translation_memory.jsonl`.
-10. Pick execution mode per batch before translation: `sub-agent` (default) or `ultracode` (dynamic workflow).
+10. Pick execution mode per batch before translation: `sub-agent` (default) or `dynamic-workflow`.
     - Translation and review always fan out. Main loop owns dialogue, term/style, batch dispatch, glossary sync, and final merge only.
     - A batch follows source semantics: one chapter = one batch; split a chapter only when it is too large for one fan-out.
     - At batch start, re-read the latest glossary (terms are decided up front and grow during the project; each batch must use the current set).
-    - Pick `sub-agent` for the batch when its content translates independently and finishes in one session; pick `ultracode` when the batch needs project-level orchestration, multi-phase structure, or a hard token budget.
+    - Pick `sub-agent` for the batch when its content translates independently and finishes in one session; pick `dynamic-workflow` when the batch needs project-level orchestration, multi-phase structure, or a hard token budget.
     - Sub-agents write Markdown, not JSONL. The default durable translation output is `translations/chunks/<chunk-id>.md`, or `translations/chunks/<chunk-id>.<segment-or-batch-id>.md` when a chunk is split for fan-out. A separate integration sub-agent or merge phase converts Markdown into the contract JSONL wrapper.
     - Sub-agents must not create or modify `runs/<run-id>.json` or `runs/*.json`. The main loop or merge/integration phase is the sole writer of run evidence because it has full batch context, schema context, and merge decisions.
     - To fire `sub-agent`: `Fan out M sub-agents across <chapter-or-batch-range>; each writes Markdown for its slice to translations/chunks/<chunk-id>.<slice-id>.md; a separate integration sub-agent converts Markdown → JSONL; main loop validates and writes translations/. Sub-agents MUST NOT write runs/*.json. Do NOT translate serially.`
-    - To fire `ultracode`: `ultracode: (phases: understand → translate (Markdown per sub-agent) → integrate (Markdown → JSONL) → pre-review)`.
-    - Record the batch's mode in `runs/<run-id>.json`. See `protocol/execution-modes.md` for the full node matrix.
+    - To fire `dynamic-workflow`: `dynamic-workflow: (phases: understand → translate (Markdown per sub-agent) → integrate (Markdown → JSONL) → pre-review)`.
+    - Record the batch's mode in `runs/<run-id>.json`. See `protocol/execution-modes.md` for the full node matrix and `protocol/file-write-prompt.md` for the sub-agent prompt templates.
 11. Translate semantic chunks with the source understanding, confirmed glossary, and style guide in context. Use Markdown as the primary translation format:
     - For a single-slice chunk, write `translations/chunks/<chunk-id>.md`.
     - For fan-out slices, each sub-agent writes `translations/chunks/<chunk-id>.<slice-id>.md`; the merge/integration phase concatenates or normalizes those files into `translations/chunks/<chunk-id>.md`.
@@ -166,20 +166,20 @@ Pick the fan-out mode per batch before translation starts. See `protocol/executi
 
 Rules:
 
-1. **Translation and review always fan out.** The main loop owns dialogue, term/style, batch dispatch, glossary sync, and final merge only. Sub-agent and ultracode output is advisory until the main loop merges it.
+1. **Translation and review always fan out.** The main loop owns dialogue, term/style, batch dispatch, glossary sync, and final merge only. Sub-agent and dynamic-workflow output is advisory until the main loop merges it.
 2. **A batch follows source semantics.** One chapter = one batch; split a chapter only when it is too large for one fan-out. At batch start, re-read the latest glossary.
 3. **Run AI pre-review with sub-agent lenses.** AI pre-review must use independent lenses before issues are written to `review/issues.jsonl`.
 
 Two fan-out modes:
 
 - **sub-agent** (default) — fan out sub-agents across the batch's chapter or section; each writes Markdown for its slice; an integration sub-agent creates the final chunk Markdown and converts Markdown → JSONL; main loop validates and writes.
-- **ultracode** — when the batch needs project-level orchestration, multi-phase structure, or a hard token budget. Prepend `ultracode:` to the prompt and list the batch's phases.
+- **dynamic-workflow** — when the batch needs project-level orchestration, multi-phase structure, or a hard token budget. Prepend `dynamic-workflow:` to the prompt and list the batch's phases.
 
-Offer `ultracode` when the batch has at least two of: many chunks in the batch, long source, complex terminology, dense Markdown/links/code, publication-grade expectations, high-risk domain, likely multi-session work, or a requested token budget. Ask once before the batch starts.
+Offer `dynamic-workflow` when the batch has at least two of: many chunks in the batch, long source, complex terminology, dense Markdown/links/code, publication-grade expectations, high-risk domain, likely multi-session work, or a requested token budget. Ask once before the batch starts.
 
 When the project needs a reusable execution default, record it in `project.yaml` under `execution.default_mode`. Record each actual run in that run's `runs/<run-id>.json`. `project.yaml` is policy; `runs/` is history.
 
-Every batch that fans out must have one `runs/<run-id>.json` record with `execution_mode`, `tool_used`, `inputs`, `outputs`, batch summary, merge decisions, errors, and limitations. The main loop or merge/integration phase writes that record after fan-in. Sub-agents must not create or modify run records. See `protocol/execution-modes.md` for the minimum schema.
+Every batch that fans out must have one `runs/<run-id>.json` record with `execution_mode`, `inputs`, `outputs`, batch summary, merge decisions, errors, and limitations. The main loop or merge/integration phase writes that record after fan-in. Sub-agents must not create or modify run records. See `protocol/execution-modes.md` for the minimum schema.
 
 ## Must Pause And Ask
 
